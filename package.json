@@ -1,0 +1,25 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Back-end paideia",
+  "main": "api.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Lucas Viana Cunha <lucasviana112@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "base64-img": "^1.0.4",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-myconnection": "^1.0.4",
+    "express-validator": "^6.1.1",
+    "fs": "0.0.1-security",
+    "multer": "^1.4.1",
+    "mysql": "^2.17.1",
+    "mysql2": "^1.6.5",
+    "nodemailer": "^6.2.1",
+    "sequelize": "^5.9.2"
+  }
+}
