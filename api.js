@@ -6,9 +6,10 @@ const api = express();//contem a instancia do express para inicialização
 const porta = 3000;//será escutado pelo "listener" do express
 const router = express.Router(); //verbos do http (get,delete,post,put,etc) para requisições
 
-const listaInscritos = require("./rotas/listaInscritos");
-const cadastraInscrito = require("./rotas/cadastraInscrito");
+const cadastraInscrito = require("./rotas/cadastraInscrito");//talvez remover
 const formInscricao = require("./rotas/formInscricao");
+const listaInscritos = require("./rotas/listaInscritos");
+const listaDetalhesInscrito = require("./rotas/listaDetalhesInscrito");
 
 //"use" trabalha as requisições conforme a demanda
 api.use(cors());//trata requisições que não é da mesma origem que a API
@@ -392,7 +393,9 @@ api.get('/requerimento', function(request, response){
 
 
 api.use("/", router);//permite utilizar a rota definida anteriormente
+
 api.use("/inscritos", listaInscritos);
+api.use("/detalhes", listaDetalhesInscrito);
 api.use("/inscricao", cadastraInscrito);
 api.use("/formulario", formInscricao);
 /*
