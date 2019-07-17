@@ -1,10 +1,13 @@
 const db = require('./db')
 
 const Arquivos = db.sequelize.define('arquivos', {
-    email: {
+    idUser: {
+        type: db.Sequelize.INTEGER
+    },
+    tipo: {
         type: db.Sequelize.STRING
     },
-    rg: {
+    arquivo: {
         type: db.Sequelize.TEXT
     }
 })//POSTERIORMENTE REMOVER OS CAMPOS "ATIVO" E "ESPERA"

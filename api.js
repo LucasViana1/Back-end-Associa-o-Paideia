@@ -24,6 +24,11 @@ router.get("/", (req,resp) => resp.json({
 const insereInscricao = require("./models/InscritosTable")
 const insereArquivo = require("./models/ArquivosTable")
 const insereUsuario = require("./models/UsuariosTable")//insere ou pesquisa usuario
+const candidatoTable = require("./models/CandidatoTable")
+const socioeconomicoTable = require("./models/SocioeconomicoTable")
+const estudosTable = require("./models/EstudosTable")
+const valoresTable = require("./models/ValoresTable")
+const arquivosTable = require("./models/ArquivosTable")
 
 //trata envio de arquivos, definindo suas configurações
 const multer = require('multer')
@@ -38,14 +43,25 @@ const storage = multer.diskStorage({
 const upload = multer({storage})
 
 //INSERE INSCRIÇÃO NO BANCO, MUDAR ESSA LINHA PARA PASTA DEDICADA A ROTAS! :
+//POSSIVELMENTE REMOVER ESSE TRECHO!
 api.post('/enviaInscricao', upload.single('rgFile'), function(req, res){
 
-    console.log(req.body);
-    console.log(req.file);
-    var nomeArquivoRG = req.file.filename;
+    var fs = require('fs');
+    function base64_encode(file) {
+        // ler dados binários
+        var bitmap = fs.readFileSync(file);
+        // converter dados binários em string codificada na base64
+        return new Buffer(bitmap).toString('base64');
+    }
+    var base64str = base64_encode(req.body);
+    //console.log(req);
+    //console.log(req.body);
+    console.log(base64str);
+    //var nomeArquivoRG = req.file.filename;
+    //console.log(nomeArquivoRG)
 
     //insere dados no banco
-    insereInscricao.create({
+    /*insereInscricao.create({
         nome: req.body.nome,
 		email: req.body.email,
         senha: req.body.senha
@@ -54,7 +70,7 @@ api.post('/enviaInscricao', upload.single('rgFile'), function(req, res){
         //res.send("Pagamento cadastro com sucesso!")
     }).catch(function(erro){
         res.send("Erro: " + erro)
-    })
+    })*/
 
     /*const base64img =  require('base64-img');
     base64img.base64('./teste.png', function(err, data) {
@@ -62,7 +78,7 @@ api.post('/enviaInscricao', upload.single('rgFile'), function(req, res){
     })*/
     //POSTERIORMENTE IMPLEMENTAR FORMA DE SALVAR BASE64 DAS IMAGENS NO BANCO E APAGA-LAS DA PASTA DE UPLOADS
 
-    insereArquivo.create({
+    /*insereArquivo.create({
 		email: req.body.email,
 		rg: nomeArquivoRG
     }).then(function(){
@@ -70,7 +86,7 @@ api.post('/enviaInscricao', upload.single('rgFile'), function(req, res){
         //res.send("Pagamento cadastro com sucesso!")
     }).catch(function(erro){
         res.send("Erro: " + erro)
-    })
+    })*/
 })
 //CADASTRA NOVO USUARIO
 api.post('/cadastraUser', function(req,res){
@@ -81,6 +97,229 @@ api.post('/cadastraUser', function(req,res){
         email: req.body.email,
         senha: req.body.senha,
         adm: 0
+    }).then(function(){
+        //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
+        //res.send("Pagamento cadastro com sucesso!")
+    }).catch(function(erro){
+        res.send("Erro: " + erro)
+    })
+})
+//CADASTRA DADOS PESSOAIS DO CANDIDATO
+api.post('/insereDadosPessoais', function(req,res){
+    //insere usuario no banco
+    candidatoTable.create({
+        idUser: req.body.idUser,
+        data_nasc: req.body.data_nasc,
+        cidade_nasc: req.body.cidade_nasc,
+        estado_nasc: req.body.estado_nasc,
+        tel1: req.body.tel1,
+        tel2: req.body.tel2,
+        cpf: req.body.cpf,
+        rg: req.body.rg,
+        cidadao: req.body.cidadao
+    }).then(function(){
+        //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
+        //res.send("Pagamento cadastro com sucesso!")
+    }).catch(function(erro){
+        res.send("Erro: " + erro)
+    })
+})
+//CADASTRA DADOS SOCIOECONOMICOS DO CANDIDATO
+api.post('/insereDadosSocioeconomicos', function(req,res){
+    //insere usuario no banco
+    socioeconomicoTable.create({
+        idUser: req.body.idUser,
+        qtd_pessoas: req.body.qtd_pessoas,
+        qtd_filhos: req.body.qtd_filhos,
+        casa: req.body.casa,
+        local_casa: req.body.local_casa,
+        transporte: req.body.transporte,
+        escol_pai: req.body.escol_pai,                                
+        escol_mae: req.body.escol_mae,
+        trab_pai: req.body.trab_pai,                
+        trab_mae: req.body.trab_mae,
+        trab_candidato: req.body.trab_candidato,
+        pessoas_renda: req.body.pessoas_renda,
+        renda_total: req.body.renda_total,
+        
+        tv: req.body.tv,
+        dvd: req.body.dvd,
+        radio: req.body.radio,
+        pc: req.body.pc,
+        automovel: req.body.automovel, 
+        lava_roupa: req.body.lava_roupa,
+        geladeira: req.body.geladeira,
+        tel_fixo: req.body.tel_fixo,
+        celular: req.body.celular,
+        acesso_internet: req.body.acesso_internet,                                  
+        tv_ass: req.body.tv_ass,
+        lava_louca: req.body.lava_louca,
+
+        trab_atual: req.body.trab_atual,
+        trab_despesas: req.body.trab_despesas,                                
+        trab_sustento: req.body.trab_sustento,
+        trab_independente: req.body.trab_independente,                
+        trab_experi: req.body.trab_experi,
+        trab_p_estudos: req.body.trab_p_estudos,
+
+        trab_horas: req.body.trab_horas,
+        estuda_e_trab: req.body.estuda_e_trab,
+        motivo_estudar: req.body.motivo_estudar,
+        eja: req.body.eja,
+        eja_tipo: req.body.eja_tipo,
+        tem_internet: req.body.tem_internet,                                
+        tem_computador: req.body.tem_computador,
+        acesso_internet: req.body.acesso_internet, 
+
+        curso_lingua: req.body.curso_lingua,
+        curso_info: req.body.curso_info,
+        curso_prepara: req.body.curso_prepara,
+        curso_tecnico: req.body.curso_tecnico,
+        curso_outro: req.body.curso_outro,
+
+        jornal: req.body.jornal,
+        sites: req.body.sites,
+        manuais: req.body.manuais,                                
+        ficcao: req.body.ficcao,
+        saude: req.body.saude,                
+        religiao: req.body.religiao,
+        humor: req.body.humor,
+        info_geral: req.body.info_geral,
+        nao_ficcao: req.body.nao_ficcao,
+        estilo: req.body.estilo,
+        educa: req.body.educa,
+        adolecente: req.body.adolecente,
+        lazer: req.body.lazer,                                
+        cientifica: req.body.cientifica,
+
+        aval_grupo: req.body.aval_grupo,                
+        aval_esporte: req.body.aval_esporte,
+        aval_biblioteca: req.body.aval_biblioteca,
+        aval_local: req.body.aval_local,
+        aval_respeito: req.body.aval_respeito,
+        aval_laboratorio: req.body.aval_laboratorio,
+        aval_sala: req.body.aval_sala,
+        aval_lingua: req.body.aval_lingua,
+        aval_interesse: req.body.aval_interesse,                                
+        aval_ambiental: req.body.aval_ambiental,
+        aval_horario: req.body.aval_horario,                
+        aval_segurancao: req.body.aval_segurancao,
+        aval_informatica: req.body.aval_informatica,
+        aval_atencao: req.body.aval_atencao,
+        
+        aval_conhecimento_prof: req.body.aval_conhecimento_prof,
+        aval_dedica_prof: req.body.aval_dedica_prof,
+        aval_passeios: req.body.aval_passeios,
+        aval_acessibilidade: req.body.aval_acessibilidade,
+               
+
+    }).then(function(){
+        //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
+        //res.send("Pagamento cadastro com sucesso!")
+    }).catch(function(erro){
+        res.send("Erro: " + erro)
+    })
+})
+//CADASTRA DADOS ESTUDOS E FORMAÇÃO
+api.post('/insereDadosEstudos', function(req,res){
+    //insere usuario no banco
+    estudosTable.create({
+        idUser: req.body.idUser,
+        ensino_fundamental: req.body.ensino_fundamental,
+        conclusao_fundamental: req.body.conclusao_fundamental,
+        ensino_medio: req.body.ensino_medio,
+        conclusao_medio: req.body.conclusao_medio,
+        turno_medio: req.body.turno_medio,
+        ano_medio: req.body.ano_medio,
+        tecnico: req.body.tecnico,
+        fez_cursinho: req.body.fez_cursinho,
+        tipo_cursinho: req.body.tipo_cursinho,
+        cursinho_particular: req.body.cursinho_particular,
+        fez_vestibular: req.body.fez_vestibular,
+        superior: req.body.superior,
+        area_desejo: req.body.area_desejo,
+        curso_univ1: req.body.curso_univ1,
+        curso_univ2: req.body.curso_univ2,
+        curso_univ3: req.body.curso_univ3,
+       
+        fuvest: req.body.fuvest,
+        comvest: req.body.comvest,
+        vunesp: req.body.vunesp,
+        enem: req.body.enem,
+        fatec: req.body.fatec
+
+    }).then(function(){
+        //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
+        //res.send("Pagamento cadastro com sucesso!")
+    }).catch(function(erro){
+        res.send("Erro: " + erro)
+    })
+})
+//CADASTRA VALORES
+api.post('/insereDadosValores', function(req,res){
+    //insere usuario no banco
+    valoresTable.create({
+        idUser: req.body.idUser,
+        racista: req.body.racista,
+        parente: req.body.parente,
+        amigo: req.body.amigo,
+        vizinho: req.body.vizinho,
+        prof: req.body.prof,
+        pessoa: req.body.pessoa,
+
+        sofreu_econo: req.body.sofreu_econo,
+        sofreu_etnica: req.body.sofreu_etnica,
+        sofreu_genero: req.body.sofreu_genero,
+        sofreu_lgbt: req.body.sofreu_lgbt,
+        sofreu_religiao: req.body.sofreu_religiao,
+
+        sofreu_sem_religiao: req.body.sofreu_sem_religiao,
+        sofreu_origem: req.body.sofreu_origem,
+        sofreu_idade: req.body.sofreu_idade,
+        sofreu_deficiencia: req.body.sofreu_deficiencia,
+        sofreu_aparencia: req.body.sofreu_aparencia,
+        sofreu_moradia: req.body.sofreu_moradia,
+
+        pre_econo: req.body.pre_econo,
+        pre_etnica: req.body.pre_etnica,
+        pre_mulher: req.body.pre_mulher,
+        pre_lgbt: req.body.pre_lgbt,
+
+        pre_religiosa: req.body.pre_religiosa,
+        pre_origem: req.body.pre_origem,
+        pre_sem_religiao: req.body.pre_sem_religiao,
+        pre_jovens: req.body.pre_jovens,
+        pre_idosos: req.body.pre_idosos,
+        pre_deficiencia: req.body.pre_deficiencia,
+        pre_fisica: req.body.pre_fisica,
+        pre_moradia: req.body.pre_moradia,
+    }).then(function(){
+        //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
+        //res.send("Pagamento cadastro com sucesso!")
+    }).catch(function(erro){
+        res.send("Erro: " + erro)
+    })
+})
+//CADASTRA ARQUIVOS DO CANDIDATO
+api.post('/insereDadosArquivos', function(req,res){
+    
+    //inserir rg
+    arquivosTable.create({
+        idUser: req.body.idUser,
+        tipo: 'RG',
+        arquivo: req.body.rgCandidato
+    }).then(function(){
+        //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
+        //res.send("Pagamento cadastro com sucesso!")
+    }).catch(function(erro){
+        res.send("Erro: " + erro)
+    })
+
+    //inserir cpf
+    arquivosTable.create({
+        idUser: req.body.idUser,
+        tipo: 'CPF',
+        arquivo: req.body.cpfCandidato
     }).then(function(){
         //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
         //res.send("Pagamento cadastro com sucesso!")
