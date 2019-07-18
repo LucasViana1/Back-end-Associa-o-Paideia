@@ -3,7 +3,7 @@ const bodyparser = require('body-parser');//le cabeçalho e converte dados
 const cors = require('cors');//permite acesso seguro a recursos de outros dominios/sites
 
 const api = express();//contem a instancia do express para inicialização
-const porta = 3000;//será escutado pelo "listener" do express
+//const porta = 3000;//será escutado pelo "listener" do express 
 const router = express.Router(); //verbos do http (get,delete,post,put,etc) para requisições
 
 const cadastraInscrito = require("./rotas/cadastraInscrito");//talvez remover
@@ -454,6 +454,10 @@ console.log(base64str);
 // converter string base64 de volta para a imagem
 base64_decode(base64str, 'copy_teste.png');
 */
-
-api.listen(porta);//faz com que a aplicação fica executando em loop
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 3000;
+}
+api.listen(port);
+//api.listen(porta);//faz com que a aplicação fica executando em loop
 console.log("Run API Express");
