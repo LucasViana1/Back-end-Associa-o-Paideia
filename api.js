@@ -460,4 +460,4 @@ if (port == null || port == "") {
 }
 api.listen(port);
 //api.listen(porta);//faz com que a aplicação fica executando em loop
-console.log("Run API Express porta: " + port);
+console.log("Run API Express porta: " + port + process.env.TESTE);
