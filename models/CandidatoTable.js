@@ -4,6 +4,9 @@ const Candidato = db.sequelize.define('candidatos', {
     idUser: {
         type: db.Sequelize.INTEGER
     },
+    nome_completo: {
+        type: db.Sequelize.STRING
+    },
     data_nasc: {
         type: db.Sequelize.DATE
     },

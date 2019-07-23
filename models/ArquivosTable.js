@@ -8,7 +8,7 @@ const Arquivos = db.sequelize.define('arquivos', {
         type: db.Sequelize.STRING
     },
     arquivo: {
-        type: db.Sequelize.TEXT
+        type: db.Sequelize.TEXT('long')
     }
 })//POSTERIORMENTE REMOVER OS CAMPOS "ATIVO" E "ESPERA"
 

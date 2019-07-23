@@ -30,6 +30,9 @@ const socioeconomicoTable = require("./models/SocioeconomicoTable")
 const estudosTable = require("./models/EstudosTable")
 const valoresTable = require("./models/ValoresTable")
 const arquivosTable = require("./models/ArquivosTable")
+const controleTable = require("./models/ControleTable")
+
+const operacoes = require("./model/Operacoes")
 
 //trata envio de arquivos, definindo suas configurações
 const multer = require('multer')
@@ -89,6 +92,9 @@ api.post('/enviaInscricao', upload.single('rgFile'), function(req, res){
         res.send("Erro: " + erro)
     })*/
 })
+
+const mail = require('./email/ServicoEmail')
+
 //CADASTRA NOVO USUARIO
 api.post('/cadastraUser', function(req,res){
     //insere usuario no banco
@@ -97,19 +103,23 @@ api.post('/cadastraUser', function(req,res){
         sobrenome: req.body.sobrenome,
         email: req.body.email,
         senha: req.body.senha,
-        adm: 0
+        adm: 0,
+        ativo: 1,
+        inscrito_atual: 0
     }).then(function(){
         //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
         //res.send("Pagamento cadastro com sucesso!")
     }).catch(function(erro){
         res.send("Erro: " + erro)
     })
+    mail.cadastroMail(req.body.email, req.body.senha, req.body.nome)
 })
 //CADASTRA DADOS PESSOAIS DO CANDIDATO
 api.post('/insereDadosPessoais', function(req,res){
     //insere usuario no banco
     candidatoTable.create({
         idUser: req.body.idUser,
+        nome_completo: req.body.nome_completo,
         data_nasc: req.body.data_nasc,
         cidade_nasc: req.body.cidade_nasc,
         estado_nasc: req.body.estado_nasc,
@@ -256,9 +266,15 @@ api.post('/insereDadosEstudos', function(req,res){
         res.send("Erro: " + erro)
     })
 })
+
+//TESTANDO O RETORNO DA QUANTIDADE DE ALUNOS
+/*const qtdIncritos = require('./qtdIncritos')
+var teste = qtdIncritos.getTodos()
+console.log("total real: "+teste)*/
+
 //CADASTRA VALORES
 api.post('/insereDadosValores', function(req,res){
-    //insere usuario no banco
+    //insere valores no banco
     valoresTable.create({
         idUser: req.body.idUser,
         racista: req.body.racista,
@@ -300,23 +316,117 @@ api.post('/insereDadosValores', function(req,res){
     }).catch(function(erro){
         res.send("Erro: " + erro)
     })
+
+    //busca tabela de usuarios atraves do id
+    insereUsuario.findAll({
+        where: {
+            id: req.body.idUser,
+        }
+    }).then(function(dados){ 
+        if(dados == ''){
+            res.send("Nenhum registro encontrado!") 
+        } else{
+            //TESTE DE RETORNO DE NUMERO DE INSCRITOS
+            var qtd = 0
+            operacoes.getQtdInscritos(function(error, retorno){
+                //console.log("retorno: "+retorno[0].id)  
+                retorno.forEach(element => {
+                    console.log("retorno: "+element.id)
+                    qtd++
+                });  
+                console.log('total: '+qtd) 
+
+                var retornoString = JSON.parse(JSON.stringify(dados))
+                console.log('dados encontrados: '+retornoString[0].email)
+                console.log("qtd inscritos: "+qtd)
+                //79
+                if(qtd <= 2){
+                    //lista regular: email lista regular, "inscrito_atual" = 1, "espera" = 0
+                    insereUsuario.update({
+                        inscrito_atual: 1,
+                        espera: 0
+                    },{
+                        where: {
+                        id: req.body.idUser
+                        }
+                    });
+                    //envia email
+                    mail.listaRegularMail(retornoString[0].email, retornoString[0].nome)
+                }
+                //79, 119
+                else if(qtd > 2 && qtd <= 3){
+                    //lista de espera: email lista espera, "inscrito_atual" = 1, "espera" = 1
+                    insereUsuario.update({
+                        inscrito_atual: 1,
+                        espera: 1
+                    },{
+                        where: {
+                        id: req.body.idUser
+                        }
+                    });
+                    //envia email
+                    mail.listaEsperaMail(retornoString[0].email, retornoString[0].nome)
+
+                    //se for o 120º candidato, tabela "controle" é marcada e as inscrições são travadas
+                    //119
+                    if(qtd == 3){
+                        controleTable.update({
+                            fim: 1
+                        },{
+                            where: {
+                            id: 1
+                            }
+                        });
+                    }
+                }
+                else{
+                    //impede que exceda 120 inscritos
+                    mail.listaCheiaMail(retornoString[0].email, retornoString[0].nome)
+                }
+                
+            })
+
+            
+            // DEPOIS REMOVER O COMENTARIO ABAIXO:
+           // mail.finalizaInscricaoMail(retornoString[0].email, retornoString[0].nome)
+        }//fim else    
+    }).catch(function(erro){
+        res.send("Erro encontrado: " + erro)
+    })
+
 })
 //CADASTRA ARQUIVOS DO CANDIDATO
 api.post('/insereDadosArquivos', function(req,res){
-    
-    //inserir rg
+//melhorar esse trecho de inserção de multiplos registros
+
+    //inserir foto OBRIGATORIO (NUNCA NULO)
     arquivosTable.create({
         idUser: req.body.idUser,
-        tipo: 'RG',
-        arquivo: req.body.rgCandidato
+        tipo: 'FOTO',
+        arquivo: req.body.foto
     }).then(function(){
-        //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
-        //res.send("Pagamento cadastro com sucesso!")
+        //console.log("AQUI: "+req.body.foto)
     }).catch(function(erro){
         res.send("Erro: " + erro)
     })
+    
+    
+    //inserir rg OBRIGATORIO (NUNCA NULO)
+    if(req.body.foto != null && req.body.foto != ''){
+        arquivosTable.create({
+            idUser: req.body.idUser,
+            tipo: 'RG',
+            arquivo: req.body.rgCandidato
+        }).then(function(){
+            //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
+            //res.send("Pagamento cadastro com sucesso!")
+        }).catch(function(erro){
+            res.send("Erro: " + erro)
+        })
+    }
+    
 
-    //inserir cpf
+    //inserir cpf OBRIGATORIO (NUNCA NULO)
     arquivosTable.create({
         idUser: req.body.idUser,
         tipo: 'CPF',
@@ -327,6 +437,100 @@ api.post('/insereDadosArquivos', function(req,res){
     }).catch(function(erro){
         res.send("Erro: " + erro)
     })
+
+    //inserir historico OBRIGATORIO (NUNCA NULO)
+    arquivosTable.create({
+        idUser: req.body.idUser,
+        tipo: 'HISTORICO',
+        arquivo: req.body.historico
+    }).then(function(){/*vazio */}).catch(function(erro){
+        res.send("Erro: " + erro)
+    })
+
+    //inserir bolsa
+    if(req.body.bolsa != null && req.body.bolsa != ''){
+        arquivosTable.create({
+            idUser: req.body.idUser,
+            tipo: 'BOLSA',
+            arquivo: req.body.bolsa
+        }).then(function(){}).catch(function(erro){
+            res.send("Erro: " + erro)
+        })
+    }
+
+    //inserir eja
+    if(req.body.eja != null && req.body.eja != ''){
+        arquivosTable.create({
+            idUser: req.body.idUser,
+            tipo: 'EJA',
+            arquivo: req.body.eja
+        }).then(function(){}).catch(function(erro){
+            res.send("Erro: " + erro)
+        })
+    }
+
+    //inserir medico
+    if(req.body.medico != null && req.body.medico != ''){
+        arquivosTable.create({
+            idUser: req.body.idUser,
+            tipo: 'MEDICO',
+            arquivo: req.body.medico
+        }).then(function(){}).catch(function(erro){
+            res.send("Erro: " + erro)
+        })
+    }
+    
+     //inserir endereco OBRIGATORIO (NUNCA NULO)
+     arquivosTable.create({
+        idUser: req.body.idUser,
+        tipo: 'ENDERECO',
+        arquivo: req.body.endereco
+    }).then(function(){}).catch(function(erro){
+        res.send("Erro: " + erro)
+    })
+
+    //inserir cidadao OBRIGATORIO (NUNCA NULO)
+    arquivosTable.create({
+        idUser: req.body.idUser,
+        tipo: 'CIDADAO',
+        arquivo: req.body.cidadao
+    }).then(function(){}).catch(function(erro){
+        res.send("Erro: " + erro)
+    })
+
+    //inserir ensinoMedio
+    if(req.body.ensinoMedio != null && req.body.ensinoMedio != ''){
+        arquivosTable.create({
+            idUser: req.body.idUser,
+            tipo: 'ENSINO_MEDIO',
+            arquivo: req.body.ensinoMedio
+        }).then(function(){}).catch(function(erro){
+            res.send("Erro: " + erro)
+        })
+    }
+    
+    //inserir rgResponsavel
+    if(req.body.rgResponsavel != null && req.body.rgResponsavel != ''){
+        arquivosTable.create({
+            idUser: req.body.idUser,
+            tipo: 'RG_RESPONSAVEL',
+            arquivo: req.body.rgResponsavel
+        }).then(function(){}).catch(function(erro){
+            res.send("Erro: " + erro)
+        })
+    }
+    
+    //inserir cpfResponsavel
+    if(req.body.cpfResponsavel != null && req.body.cpfResponsavel != ''){
+        arquivosTable.create({
+            idUser: req.body.idUser,
+            tipo: 'CPF_RESPONSAVEL',
+            arquivo: req.body.cpfResponsavel
+        }).then(function(){}).catch(function(erro){
+            res.send("Erro: " + erro)
+        })
+    }
+
 })
 //SESSAO USUARIO CADASTRADO 
 api.post('/login', function(req,res){
@@ -364,6 +568,21 @@ api.post('/login', function(req,res){
     })
 })*/
 
+/*TRECHO RESPONSÁVEL PARA BLOQUEAR A INSCRICAO QUANDO NÃO TIVER MAIS VAGAS */
+api.get('/inscricao', function(req,res){
+
+    controleTable.findAll({
+        where: {
+            id: 1
+        }
+    }).then(function(dados){
+        
+        res.send(dados) 
+        
+    }).catch(function(erro){res.send("Erro encontrado: " + erro)})
+    //res.send('teste')
+})
+
 //arquivos em pdf:
 const fs = require('fs');
 api.get('/informacoes', function(request, response){
@@ -396,8 +615,8 @@ api.use("/", router);//permite utilizar a rota definida anteriormente
 
 api.use("/inscritos", listaInscritos);
 api.use("/detalhes", listaDetalhesInscrito);
-api.use("/inscricao", cadastraInscrito);
-api.use("/formulario", formInscricao);
+//api.use("/inscricao", cadastraInscrito);
+//api.use("/formulario", formInscricao);
 /*
 //SERVIÇO DE EMAIL temporario, posteriormente implementar em outro arquivo
 const nodemailer = require('nodemailer');
@@ -460,4 +679,4 @@ if (port == null || port == "") {
 }
 api.listen(port);
 //api.listen(porta);//faz com que a aplicação fica executando em loop
-console.log("Run API Express porta: " + port + process.env.TESTE);
+console.log("Run API Express porta: " + port);

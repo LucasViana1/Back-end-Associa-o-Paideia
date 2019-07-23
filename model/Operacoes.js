@@ -1,7 +1,8 @@
 //camada model do projeto, possui as operações que podem ser realizadas
 const db = require("../conecta");//credenciais de conexao ao banco
-var todosInscritos = "SELECT candidatos.cpf, candidatos.cidadao, usuarios.id, usuarios.nome, usuarios.email FROM candidatos INNER JOIN usuarios ON candidatos.idUser = usuarios.id";
-var dadosCandidato = "SELECT * FROM candidatos WHERE idUser = ?";
+var todosInscritos = "SELECT candidatos.cpf, candidatos.cidadao, usuarios.id, usuarios.nome, usuarios.email, usuarios.espera FROM candidatos INNER JOIN usuarios ON candidatos.idUser = usuarios.id WHERE usuarios.inscrito_atual = 1";
+
+var dadosCandidato = "SELECT candidatos.nome_completo, candidatos.data_nasc, candidatos.cidade_nasc, candidatos.estado_nasc, candidatos.tel1, candidatos.tel2, candidatos.cpf, candidatos.rg, candidatos.cidadao, usuarios.email, arquivos.tipo, arquivos.arquivo FROM candidatos INNER JOIN usuarios ON candidatos.idUser = usuarios.id INNER JOIN arquivos ON arquivos.idUser = usuarios.id WHERE usuarios.id = ?";
 //exportando a classe
 module.exports = class Operacoes{
     //todos os metodos implementado receberam parametros e funções de callback
@@ -18,6 +19,9 @@ module.exports = class Operacoes{
         /*modelo inner join:
         SELECT candidatos.cpf, usuarios.nome, usuarios.email FROM candidatos
         INNER JOIN usuarios ON candidatos.idUser = usuarios.id*/
+    }
+    static getQtdInscritos(callback){
+        return db.query("SELECT * FROM usuarios WHERE inscrito_atual = 1" , callback);//depois implementar clausula WHERE
     }
     static insereInscrito(dados, callback){
         console.log(dados.nome);

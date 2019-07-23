@@ -14,7 +14,19 @@ const Usuarios = db.sequelize.define('usuarios', {
         type: db.Sequelize.STRING
     },
     adm: {
-        type: db.Sequelize.INTEGER
+        type: db.Sequelize.TINYINT
+    },
+    ativo: {
+        type: db.Sequelize.TINYINT
+    },
+    inscrito_atual: {
+        type: db.Sequelize.TINYINT
+    },
+    espera: {
+        type: db.Sequelize.TINYINT
+    },
+    presenca: {
+        type: db.Sequelize.STRING
     }
 })//IMPLEMENTAR DEMAIS CAMPOS FUTURAMENTE
 
