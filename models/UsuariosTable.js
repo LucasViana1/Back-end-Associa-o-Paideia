@@ -25,8 +25,14 @@ const Usuarios = db.sequelize.define('usuarios', {
     espera: {
         type: db.Sequelize.TINYINT
     },
+    codigo: {
+        type: db.Sequelize.INTEGER
+    },
     presenca: {
         type: db.Sequelize.STRING
+    },
+    cancelado: {
+        type: db.Sequelize.TINYINT
     }
 })//IMPLEMENTAR DEMAIS CAMPOS FUTURAMENTE
 

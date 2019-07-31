@@ -8,7 +8,7 @@ const Candidato = db.sequelize.define('candidatos', {
         type: db.Sequelize.STRING
     },
     data_nasc: {
-        type: db.Sequelize.DATE
+        type: db.Sequelize.STRING
     },
     cidade_nasc: {
         type: db.Sequelize.STRING

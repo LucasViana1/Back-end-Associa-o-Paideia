@@ -14,7 +14,7 @@ var transporter = nodemailer.createTransport({
     }
    });
 
-exports.cadastroMail = function(destinatario,senha,nome){
+exports.cadastroMail = function(destinatario,senha,nome,codigo){
     //detalhes do email
     const mailOptions = {
         //posteriormente alterar o email adm por algum outro
@@ -24,12 +24,13 @@ exports.cadastroMail = function(destinatario,senha,nome){
         html: 
         '<h1>Olá '+nome+'!</h1>'+
         '<h2>Seu cadastro ao Sistema da Associação Paideia foi realizado com sucesso!</h2><br>'+
-        '<h3>O cadastro é necessário para que seja dado prosseguimento a inscrição.</h4><br>'+
+        '<p>O cadastro é necessário para que seja dado prosseguimento a inscrição.</p><br>'+
         '<h3>APENAS ESSE CADASTRO NÃO GARANTE SUA VAGA!</h3><br>'+
-        '<h3><p>Você já pode preencher seu formulario de inscrição, dados para acesso:</p>'+
+        '<p>Você já pode preencher seu formulario de inscrição, dados para acesso:</p>'+
             '<p><b>Login: </b>'+destinatario+'</p>'+
             '<p><b>Senha: </b>'+senha+'</p>'+
-        '</h3><br>'+
+            '<p><b>Código (para válidar o primeiro acesso): </b>'+codigo+'</p>'+
+        '<br>'+
         '<h3>Acesse através do link: <a href="http://localhost:8080/login">http://localhost:8080/login</a></h3>'
     };
     //envia efetivamente o email com base nas configurações anteriores
@@ -114,4 +115,28 @@ exports.listaCheiaMail = function(destinatario,nome){
             console.log("Info gerado: " + info);
     });
 
+}
+
+exports.recuperaSenhaMail = function(destinatario,senha,nome){
+    //detalhes do email
+    const mailOptions = {
+        //posteriormente alterar o email adm por algum outro
+        from: 'devopsprog@gmail.com', // remetente
+        to: destinatario, // destinatario
+        subject: 'RECUPERAÇÃO DE SENHA', // assunto
+        html: 
+        '<h1>Olá '+nome+'!</h1>'+
+        '<h3><p>Segue abaixo os dados para acesso ao site:</p></h3>'+
+            '<p><b>Login: </b>'+destinatario+'</p>'+
+            '<p><b>Senha: </b>'+senha+'</p>'+
+        '<br>'+
+        '<h3>Acesse através do link: <a href="http://localhost:8080/login">http://localhost:8080/login</a></h3>'
+    };
+    //envia efetivamente o email com base nas configurações anteriores
+    transporter.sendMail(mailOptions, function (err, info) {
+        if(err)
+            console.log("Erro gerado: " + err)
+        else
+            console.log("Info gerado: " + info);
+    });
 }

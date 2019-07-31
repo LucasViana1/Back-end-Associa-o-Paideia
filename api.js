@@ -10,6 +10,7 @@ const cadastraInscrito = require("./rotas/cadastraInscrito");//talvez remover
 const formInscricao = require("./rotas/formInscricao");
 const listaInscritos = require("./rotas/listaInscritos");
 const listaDetalhesInscrito = require("./rotas/listaDetalhesInscrito");
+const listaDadosCompletos = require("./rotas/listaDadosCompletos");
 
 //"use" trabalha as requisições conforme a demanda
 api.use(cors());//trata requisições que não é da mesma origem que a API
@@ -95,176 +96,262 @@ api.post('/enviaInscricao', upload.single('rgFile'), function(req, res){
 
 const mail = require('./email/ServicoEmail')
 
+//console.log(Math.floor(Math.random() * 99999))
+
 //CADASTRA NOVO USUARIO
 api.post('/cadastraUser', function(req,res){
-    //insere usuario no banco
-    insereUsuario.create({
-        nome: req.body.nome,
-        sobrenome: req.body.sobrenome,
-        email: req.body.email,
-        senha: req.body.senha,
-        adm: 0,
-        ativo: 1,
-        inscrito_atual: 0
-    }).then(function(){
-        //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
-        //res.send("Pagamento cadastro com sucesso!")
-    }).catch(function(erro){
-        res.send("Erro: " + erro)
+
+    //impede que seja inserido duplicatas, talvez add mais um parametro de verificação 
+    //para quando implementar logica de usuario que ja possui cadastro tentar se cadastrar novamente
+    insereUsuario.findAll({
+        where: {
+            nome: req.body.nome,
+            sobrenome: req.body.sobrenome,
+            email: req.body.email,
+            senha: req.body.senha,
+        }
+    }).then(function(dados){ 
+        if(dados == ''){
+            var codigoRandom = Math.floor(Math.random() * 99999)
+            //insere usuario no banco
+            insereUsuario.create({
+                nome: req.body.nome,
+                sobrenome: req.body.sobrenome,
+                email: req.body.email,
+                senha: req.body.senha,
+                adm: 0,
+                ativo: 0,
+                inscrito_atual: 0,
+                codigo: codigoRandom
+            }).then(function(){
+                //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
+                //res.send("Pagamento cadastro com sucesso!")
+            }).catch(function(erro){
+                res.send("Erro: " + erro)
+            })
+            mail.cadastroMail(req.body.email, req.body.senha, req.body.nome, codigoRandom)
+            
+        } else{
+            //ja possui o registro inserido recentemente no banco de dados
+        }
+
     })
-    mail.cadastroMail(req.body.email, req.body.senha, req.body.nome)
+
+
 })
 //CADASTRA DADOS PESSOAIS DO CANDIDATO
 api.post('/insereDadosPessoais', function(req,res){
-    //insere usuario no banco
-    candidatoTable.create({
-        idUser: req.body.idUser,
-        nome_completo: req.body.nome_completo,
-        data_nasc: req.body.data_nasc,
-        cidade_nasc: req.body.cidade_nasc,
-        estado_nasc: req.body.estado_nasc,
-        tel1: req.body.tel1,
-        tel2: req.body.tel2,
-        cpf: req.body.cpf,
-        rg: req.body.rg,
-        cidadao: req.body.cidadao
-    }).then(function(){
-        //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
-        //res.send("Pagamento cadastro com sucesso!")
-    }).catch(function(erro){
-        res.send("Erro: " + erro)
+    console.log("data inserida: "+req.body.data_nasc)
+
+    candidatoTable.findAll({
+        where: {
+            idUser: req.body.idUser,
+            nome_completo: req.body.nome_completo,
+            data_nasc: req.body.data_nasc,
+            cidade_nasc: req.body.cidade_nasc,
+            estado_nasc: req.body.estado_nasc,
+            tel1: req.body.tel1,
+            tel2: req.body.tel2,
+            cpf: req.body.cpf,
+            rg: req.body.rg,
+            cidadao: req.body.cidadao
+        }
+    }).then(function(dados){ 
+        if(dados == ''){
+            //insere usuario no banco
+            candidatoTable.create({
+                idUser: req.body.idUser,
+                nome_completo: req.body.nome_completo,
+                data_nasc: req.body.data_nasc,
+                cidade_nasc: req.body.cidade_nasc,
+                estado_nasc: req.body.estado_nasc,
+                tel1: req.body.tel1,
+                tel2: req.body.tel2,
+                cpf: req.body.cpf,
+                rg: req.body.rg,
+                cidadao: req.body.cidadao
+            }).then(function(){}).catch(function(erro){res.send("Erro: " + erro)})         
+        } else{
+            //ja possui o registro inserido recentemente no banco de dados
+        }
     })
+
+    
 })
 //CADASTRA DADOS SOCIOECONOMICOS DO CANDIDATO
 api.post('/insereDadosSocioeconomicos', function(req,res){
-    //insere usuario no banco
-    socioeconomicoTable.create({
-        idUser: req.body.idUser,
-        qtd_pessoas: req.body.qtd_pessoas,
-        qtd_filhos: req.body.qtd_filhos,
-        casa: req.body.casa,
-        local_casa: req.body.local_casa,
-        transporte: req.body.transporte,
-        escol_pai: req.body.escol_pai,                                
-        escol_mae: req.body.escol_mae,
-        trab_pai: req.body.trab_pai,                
-        trab_mae: req.body.trab_mae,
-        trab_candidato: req.body.trab_candidato,
-        pessoas_renda: req.body.pessoas_renda,
-        renda_total: req.body.renda_total,
-        
-        tv: req.body.tv,
-        dvd: req.body.dvd,
-        radio: req.body.radio,
-        pc: req.body.pc,
-        automovel: req.body.automovel, 
-        lava_roupa: req.body.lava_roupa,
-        geladeira: req.body.geladeira,
-        tel_fixo: req.body.tel_fixo,
-        celular: req.body.celular,
-        acesso_internet: req.body.acesso_internet,                                  
-        tv_ass: req.body.tv_ass,
-        lava_louca: req.body.lava_louca,
 
-        trab_atual: req.body.trab_atual,
-        trab_despesas: req.body.trab_despesas,                                
-        trab_sustento: req.body.trab_sustento,
-        trab_independente: req.body.trab_independente,                
-        trab_experi: req.body.trab_experi,
-        trab_p_estudos: req.body.trab_p_estudos,
+    socioeconomicoTable.findAll({
+        where: {
+            idUser: req.body.idUser,
 
-        trab_horas: req.body.trab_horas,
-        estuda_e_trab: req.body.estuda_e_trab,
-        motivo_estudar: req.body.motivo_estudar,
-        eja: req.body.eja,
-        eja_tipo: req.body.eja_tipo,
-        tem_internet: req.body.tem_internet,                                
-        tem_computador: req.body.tem_computador,
-        acesso_internet: req.body.acesso_internet, 
+        }
+    }).then(function(dados){ 
+        if(dados == ''){
+            //insere socioeconomico no banco
+            socioeconomicoTable.create({
+                idUser: req.body.idUser,
+                qtd_pessoas: req.body.qtd_pessoas,
+                qtd_filhos: req.body.qtd_filhos,
+                casa: req.body.casa,
+                local_casa: req.body.local_casa,
+                transporte: req.body.transporte,
+                escol_pai: req.body.escol_pai,                                
+                escol_mae: req.body.escol_mae,
+                trab_pai: req.body.trab_pai,                
+                trab_mae: req.body.trab_mae,
+                trab_candidato: req.body.trab_candidato,
+                pessoas_renda: req.body.pessoas_renda,
+                renda_total: req.body.renda_total,
+                
+                tv: req.body.tv,
+                dvd: req.body.dvd,
+                radio: req.body.radio,
+                pc: req.body.pc,
+                automovel: req.body.automovel, 
+                lava_roupa: req.body.lava_roupa,
+                geladeira: req.body.geladeira,
+                tel_fixo: req.body.tel_fixo,
+                celular: req.body.celular,
+                acesso_internet: req.body.acesso_internet,                                  
+                tv_ass: req.body.tv_ass,
+                lava_louca: req.body.lava_louca,
 
-        curso_lingua: req.body.curso_lingua,
-        curso_info: req.body.curso_info,
-        curso_prepara: req.body.curso_prepara,
-        curso_tecnico: req.body.curso_tecnico,
-        curso_outro: req.body.curso_outro,
+                trab_atual: req.body.trab_atual,
+                trab_despesas: req.body.trab_despesas,                                
+                trab_sustento: req.body.trab_sustento,
+                trab_independente: req.body.trab_independente,                
+                trab_experi: req.body.trab_experi,
+                trab_p_estudos: req.body.trab_p_estudos,
 
-        jornal: req.body.jornal,
-        sites: req.body.sites,
-        manuais: req.body.manuais,                                
-        ficcao: req.body.ficcao,
-        saude: req.body.saude,                
-        religiao: req.body.religiao,
-        humor: req.body.humor,
-        info_geral: req.body.info_geral,
-        nao_ficcao: req.body.nao_ficcao,
-        estilo: req.body.estilo,
-        educa: req.body.educa,
-        adolecente: req.body.adolecente,
-        lazer: req.body.lazer,                                
-        cientifica: req.body.cientifica,
+                trab_horas: req.body.trab_horas,
+                estuda_e_trab: req.body.estuda_e_trab,
+                motivo_estudar: req.body.motivo_estudar,
+                eja: req.body.eja,
+                eja_tipo: req.body.eja_tipo,
+                tem_internet: req.body.tem_internet,                                
+                //tem_computador: req.body.tem_computador,
+                acesso_internet: req.body.acesso_internet, 
 
-        aval_grupo: req.body.aval_grupo,                
-        aval_esporte: req.body.aval_esporte,
-        aval_biblioteca: req.body.aval_biblioteca,
-        aval_local: req.body.aval_local,
-        aval_respeito: req.body.aval_respeito,
-        aval_laboratorio: req.body.aval_laboratorio,
-        aval_sala: req.body.aval_sala,
-        aval_lingua: req.body.aval_lingua,
-        aval_interesse: req.body.aval_interesse,                                
-        aval_ambiental: req.body.aval_ambiental,
-        aval_horario: req.body.aval_horario,                
-        aval_segurancao: req.body.aval_segurancao,
-        aval_informatica: req.body.aval_informatica,
-        aval_atencao: req.body.aval_atencao,
-        
-        aval_conhecimento_prof: req.body.aval_conhecimento_prof,
-        aval_dedica_prof: req.body.aval_dedica_prof,
-        aval_passeios: req.body.aval_passeios,
-        aval_acessibilidade: req.body.aval_acessibilidade,
-               
+                curso_lingua: req.body.curso_lingua,
+                curso_info: req.body.curso_info,
+                curso_prepara: req.body.curso_prepara,
+                curso_tecnico: req.body.curso_tecnico,
+                curso_outro: req.body.curso_outro,
 
-    }).then(function(){
-        //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
-        //res.send("Pagamento cadastro com sucesso!")
-    }).catch(function(erro){
-        res.send("Erro: " + erro)
+                jornal: req.body.jornal,
+                sites: req.body.sites,
+                manuais: req.body.manuais,                                
+                ficcao: req.body.ficcao,
+                saude: req.body.saude,                
+                religiao: req.body.religiao,
+                humor: req.body.humor,
+                info_geral: req.body.info_geral,
+                nao_ficcao: req.body.nao_ficcao,
+                estilo: req.body.estilo,
+                educa: req.body.educa,
+                adolecente: req.body.adolecente,
+                lazer: req.body.lazer,                                
+                cientifica: req.body.cientifica,
+
+                aval_grupo: req.body.aval_grupo,                
+                aval_esporte: req.body.aval_esporte,
+                aval_biblioteca: req.body.aval_biblioteca,
+                aval_local: req.body.aval_local,
+                aval_respeito: req.body.aval_respeito,
+                aval_laboratorio: req.body.aval_laboratorio,
+                aval_sala: req.body.aval_sala,
+                aval_lingua: req.body.aval_lingua,
+                aval_interesse: req.body.aval_interesse,                                
+                aval_ambiental: req.body.aval_ambiental,
+                aval_horario: req.body.aval_horario,                
+                aval_segurancao: req.body.aval_segurancao,
+                aval_informatica: req.body.aval_informatica,
+                aval_atencao: req.body.aval_atencao,
+                
+                aval_conhecimento_prof: req.body.aval_conhecimento_prof,
+                aval_dedica_prof: req.body.aval_dedica_prof,
+                aval_passeios: req.body.aval_passeios,
+                aval_acessibilidade: req.body.aval_acessibilidade,
+                    
+
+            }).then(function(){
+                //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
+                //res.send("Pagamento cadastro com sucesso!")
+            }).catch(function(erro){
+                res.send("Erro: " + erro)
+            })
+           
+        } else{
+            //ja possui o registro inserido recentemente no banco de dados
+        }
     })
+
+    
 })
 //CADASTRA DADOS ESTUDOS E FORMAÇÃO
 api.post('/insereDadosEstudos', function(req,res){
-    //insere usuario no banco
-    estudosTable.create({
-        idUser: req.body.idUser,
-        ensino_fundamental: req.body.ensino_fundamental,
-        conclusao_fundamental: req.body.conclusao_fundamental,
-        ensino_medio: req.body.ensino_medio,
-        conclusao_medio: req.body.conclusao_medio,
-        turno_medio: req.body.turno_medio,
-        ano_medio: req.body.ano_medio,
-        tecnico: req.body.tecnico,
-        fez_cursinho: req.body.fez_cursinho,
-        tipo_cursinho: req.body.tipo_cursinho,
-        cursinho_particular: req.body.cursinho_particular,
-        fez_vestibular: req.body.fez_vestibular,
-        superior: req.body.superior,
-        area_desejo: req.body.area_desejo,
-        curso_univ1: req.body.curso_univ1,
-        curso_univ2: req.body.curso_univ2,
-        curso_univ3: req.body.curso_univ3,
-       
-        fuvest: req.body.fuvest,
-        comvest: req.body.comvest,
-        vunesp: req.body.vunesp,
-        enem: req.body.enem,
-        fatec: req.body.fatec
 
-    }).then(function(){
-        //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
-        //res.send("Pagamento cadastro com sucesso!")
-    }).catch(function(erro){
-        res.send("Erro: " + erro)
+    estudosTable.findAll({
+        where: {
+            idUser: req.body.idUser,
+            ensino_fundamental: req.body.ensino_fundamental,
+            conclusao_fundamental: req.body.conclusao_fundamental,
+            ensino_medio: req.body.ensino_medio,
+            conclusao_medio: req.body.conclusao_medio,
+            turno_medio: req.body.turno_medio,
+            ano_medio: req.body.ano_medio,
+            tecnico: req.body.tecnico,
+            fez_cursinho: req.body.fez_cursinho,
+            tipo_cursinho: req.body.tipo_cursinho,
+            cursinho_particular: req.body.cursinho_particular,
+            fez_vestibular: req.body.fez_vestibular,
+            superior: req.body.superior,
+            area_desejo: req.body.area_desejo,
+            curso_univ1: req.body.curso_univ1,
+            curso_univ2: req.body.curso_univ2,
+            curso_univ3: req.body.curso_univ3
+        }
+    }).then(function(dados){ 
+        if(dados == ''){
+            //insere estudos/formacao usuario no banco
+            estudosTable.create({
+                idUser: req.body.idUser,
+                ensino_fundamental: req.body.ensino_fundamental,
+                conclusao_fundamental: req.body.conclusao_fundamental,
+                ensino_medio: req.body.ensino_medio,
+                conclusao_medio: req.body.conclusao_medio,
+                turno_medio: req.body.turno_medio,
+                ano_medio: req.body.ano_medio,
+                tecnico: req.body.tecnico,
+                fez_cursinho: req.body.fez_cursinho,
+                tipo_cursinho: req.body.tipo_cursinho,
+                cursinho_particular: req.body.cursinho_particular,
+                fez_vestibular: req.body.fez_vestibular,
+                superior: req.body.superior,
+                area_desejo: req.body.area_desejo,
+                curso_univ1: req.body.curso_univ1,
+                curso_univ2: req.body.curso_univ2,
+                curso_univ3: req.body.curso_univ3,
+                fuvest: req.body.fuvest,
+                comvest: req.body.comvest,
+                vunesp: req.body.vunesp,
+                enem: req.body.enem,
+                fatec: req.body.fatec
+
+            }).then(function(){
+                //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
+                //res.send("Pagamento cadastro com sucesso!")
+            }).catch(function(erro){
+                res.send("Erro: " + erro)
+            })  
+             
+        } else{
+            //ja possui o registro inserido recentemente no banco de dados
+        }
     })
+
+    
 })
 
 //TESTANDO O RETORNO DA QUANTIDADE DE ALUNOS
@@ -274,263 +361,481 @@ console.log("total real: "+teste)*/
 
 //CADASTRA VALORES
 api.post('/insereDadosValores', function(req,res){
-    //insere valores no banco
-    valoresTable.create({
-        idUser: req.body.idUser,
-        racista: req.body.racista,
-        parente: req.body.parente,
-        amigo: req.body.amigo,
-        vizinho: req.body.vizinho,
-        prof: req.body.prof,
-        pessoa: req.body.pessoa,
 
-        sofreu_econo: req.body.sofreu_econo,
-        sofreu_etnica: req.body.sofreu_etnica,
-        sofreu_genero: req.body.sofreu_genero,
-        sofreu_lgbt: req.body.sofreu_lgbt,
-        sofreu_religiao: req.body.sofreu_religiao,
-
-        sofreu_sem_religiao: req.body.sofreu_sem_religiao,
-        sofreu_origem: req.body.sofreu_origem,
-        sofreu_idade: req.body.sofreu_idade,
-        sofreu_deficiencia: req.body.sofreu_deficiencia,
-        sofreu_aparencia: req.body.sofreu_aparencia,
-        sofreu_moradia: req.body.sofreu_moradia,
-
-        pre_econo: req.body.pre_econo,
-        pre_etnica: req.body.pre_etnica,
-        pre_mulher: req.body.pre_mulher,
-        pre_lgbt: req.body.pre_lgbt,
-
-        pre_religiosa: req.body.pre_religiosa,
-        pre_origem: req.body.pre_origem,
-        pre_sem_religiao: req.body.pre_sem_religiao,
-        pre_jovens: req.body.pre_jovens,
-        pre_idosos: req.body.pre_idosos,
-        pre_deficiencia: req.body.pre_deficiencia,
-        pre_fisica: req.body.pre_fisica,
-        pre_moradia: req.body.pre_moradia,
-    }).then(function(){
-        //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
-        //res.send("Pagamento cadastro com sucesso!")
-    }).catch(function(erro){
-        res.send("Erro: " + erro)
-    })
-
-    //busca tabela de usuarios atraves do id
-    insereUsuario.findAll({
+    valoresTable.findAll({
         where: {
-            id: req.body.idUser,
+            idUser: req.body.idUser,
         }
-    }).then(function(dados){ 
-        if(dados == ''){
-            res.send("Nenhum registro encontrado!") 
-        } else{
-            //TESTE DE RETORNO DE NUMERO DE INSCRITOS
-            var qtd = 0
-            operacoes.getQtdInscritos(function(error, retorno){
-                //console.log("retorno: "+retorno[0].id)  
-                retorno.forEach(element => {
-                    console.log("retorno: "+element.id)
-                    qtd++
-                });  
-                console.log('total: '+qtd) 
+    }).then(function(dadosVerifica){ 
+        if(dadosVerifica == ''){
 
-                var retornoString = JSON.parse(JSON.stringify(dados))
-                console.log('dados encontrados: '+retornoString[0].email)
-                console.log("qtd inscritos: "+qtd)
-                //79
-                if(qtd <= 2){
-                    //lista regular: email lista regular, "inscrito_atual" = 1, "espera" = 0
-                    insereUsuario.update({
-                        inscrito_atual: 1,
-                        espera: 0
-                    },{
-                        where: {
-                        id: req.body.idUser
-                        }
-                    });
-                    //envia email
-                    mail.listaRegularMail(retornoString[0].email, retornoString[0].nome)
-                }
-                //79, 119
-                else if(qtd > 2 && qtd <= 3){
-                    //lista de espera: email lista espera, "inscrito_atual" = 1, "espera" = 1
-                    insereUsuario.update({
-                        inscrito_atual: 1,
-                        espera: 1
-                    },{
-                        where: {
-                        id: req.body.idUser
-                        }
-                    });
-                    //envia email
-                    mail.listaEsperaMail(retornoString[0].email, retornoString[0].nome)
+            //insere valores no banco
+            valoresTable.create({
+                idUser: req.body.idUser,
+                racista: req.body.racista,
+                parente: req.body.parente,
+                amigo: req.body.amigo,
+                vizinho: req.body.vizinho,
+                prof: req.body.prof,
+                pessoa: req.body.pessoa,
 
-                    //se for o 120º candidato, tabela "controle" é marcada e as inscrições são travadas
-                    //119
-                    if(qtd == 3){
-                        controleTable.update({
-                            fim: 1
-                        },{
-                            where: {
-                            id: 1
-                            }
-                        });
-                    }
-                }
-                else{
-                    //impede que exceda 120 inscritos
-                    mail.listaCheiaMail(retornoString[0].email, retornoString[0].nome)
-                }
-                
+                sofreu_econo: req.body.sofreu_econo,
+                sofreu_etnica: req.body.sofreu_etnica,
+                sofreu_genero: req.body.sofreu_genero,
+                sofreu_lgbt: req.body.sofreu_lgbt,
+                sofreu_religiao: req.body.sofreu_religiao,
+
+                sofreu_sem_religiao: req.body.sofreu_sem_religiao,
+                sofreu_origem: req.body.sofreu_origem,
+                sofreu_idade: req.body.sofreu_idade,
+                sofreu_deficiencia: req.body.sofreu_deficiencia,
+                sofreu_aparencia: req.body.sofreu_aparencia,
+                sofreu_moradia: req.body.sofreu_moradia,
+
+                pre_econo: req.body.pre_econo,
+                pre_etnica: req.body.pre_etnica,
+                pre_mulher: req.body.pre_mulher,
+                pre_lgbt: req.body.pre_lgbt,
+
+                pre_religiosa: req.body.pre_religiosa,
+                pre_origem: req.body.pre_origem,
+                pre_sem_religiao: req.body.pre_sem_religiao,
+                pre_jovens: req.body.pre_jovens,
+                pre_idosos: req.body.pre_idosos,
+                pre_deficiencia: req.body.pre_deficiencia,
+                pre_fisica: req.body.pre_fisica,
+                pre_moradia: req.body.pre_moradia,
+            }).then(function(){
+                //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
+                //res.send("Pagamento cadastro com sucesso!")
+            }).catch(function(erro){
+                res.send("Erro: " + erro)
             })
 
+            //busca tabela de usuarios atraves do id
+            insereUsuario.findAll({
+                where: {
+                    id: req.body.idUser,
+                }
+            }).then(function(dados){ 
+                if(dados == ''){
+                    res.send("Nenhum registro encontrado!") 
+                } else{
+                    //TESTE DE RETORNO DE NUMERO DE INSCRITOS
+                    var qtd = 0
+                    operacoes.getQtdInscritos(function(error, retorno){
+                        //console.log("retorno: "+retorno[0].id)  
+                        retorno.forEach(element => {
+                            console.log("retorno: "+element.id)
+                            qtd++
+                        });  
+                        console.log('total: '+qtd) 
+
+                        var retornoString = JSON.parse(JSON.stringify(dados))
+                        console.log('dados encontrados: '+retornoString[0].email)
+                        console.log("qtd inscritos: "+qtd)
+                        //79
+                        if(qtd <= 2){
+                            //lista regular: email lista regular, "inscrito_atual" = 1, "espera" = 0
+                            insereUsuario.update({
+                                inscrito_atual: 1,
+                                espera: 0
+                            },{
+                                where: {
+                                id: req.body.idUser
+                                }
+                            });
+                            //envia email
+                            mail.listaRegularMail(retornoString[0].email, retornoString[0].nome)
+                        }
+                        //79, 119
+                        else if(qtd > 2 && qtd <= 4){
+                            //lista de espera: email lista espera, "inscrito_atual" = 1, "espera" = 1
+                            insereUsuario.update({
+                                inscrito_atual: 1,
+                                espera: 1
+                            },{
+                                where: {
+                                id: req.body.idUser
+                                }
+                            });
+                            //envia email
+                            mail.listaEsperaMail(retornoString[0].email, retornoString[0].nome)
+
+                            //se for o 120º candidato, tabela "controle" é marcada e as inscrições são travadas
+                            //119
+                            if(qtd == 4){
+                                controleTable.update({
+                                    fim: 1
+                                },{
+                                    where: {
+                                    id: 1
+                                    }
+                                });
+                            }
+                        }
+                        else{
+                            //impede que exceda 120 inscritos
+                            mail.listaCheiaMail(retornoString[0].email, retornoString[0].nome)
+                        }
+                        
+                    })
+
+                    
+                    // DEPOIS REMOVER O COMENTARIO ABAIXO:
+                // mail.finalizaInscricaoMail(retornoString[0].email, retornoString[0].nome)
+                }//fim else    
+            }).catch(function(erro){
+                res.send("Erro encontrado: " + erro)
+            })
             
-            // DEPOIS REMOVER O COMENTARIO ABAIXO:
-           // mail.finalizaInscricaoMail(retornoString[0].email, retornoString[0].nome)
-        }//fim else    
-    }).catch(function(erro){
-        res.send("Erro encontrado: " + erro)
+        } else{
+            //ja possui o registro inserido recentemente no banco de dados
+            console.log("aqui!")
+            console.log(dadosVerifica)
+        }
     })
+
+
 
 })
 //CADASTRA ARQUIVOS DO CANDIDATO
 api.post('/insereDadosArquivos', function(req,res){
 //melhorar esse trecho de inserção de multiplos registros
 
-    //inserir foto OBRIGATORIO (NUNCA NULO)
-    arquivosTable.create({
-        idUser: req.body.idUser,
-        tipo: 'FOTO',
-        arquivo: req.body.foto
-    }).then(function(){
-        //console.log("AQUI: "+req.body.foto)
-    }).catch(function(erro){
-        res.send("Erro: " + erro)
+    arquivosTable.findAll({
+        where: {
+            idUser: req.body.idUser,
+            tipo: 'FOTO',
+            arquivo: req.body.foto
+        }
+    }).then(function(dados){ 
+        if(dados == ''){
+            //caso não exista duplicata    
+            //inserir foto
+            if(req.body.foto != null && req.body.foto != ''){
+                arquivosTable.create({
+                    idUser: req.body.idUser,
+                    tipo: 'FOTO',
+                    arquivo: req.body.foto
+                }).then(function(){
+                    //console.log("AQUI: "+req.body.foto)
+                }).catch(function(erro){
+                    res.send("Erro: " + erro)
+                })
+            }   
+        } else{
+            //ja possui o registro inserido recentemente no banco de dados
+        }
     })
-    
-    
-    //inserir rg OBRIGATORIO (NUNCA NULO)
-    if(req.body.foto != null && req.body.foto != ''){
-        arquivosTable.create({
+
+    arquivosTable.findAll({
+        where: {
             idUser: req.body.idUser,
             tipo: 'RG',
             arquivo: req.body.rgCandidato
-        }).then(function(){
-            //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
-            //res.send("Pagamento cadastro com sucesso!")
-        }).catch(function(erro){
-            res.send("Erro: " + erro)
-        })
-    }
+        }
+    }).then(function(dados){ 
+        if(dados == ''){
+            //caso não exista duplicata    
+            //inserir rg OBRIGATORIO (NUNCA NULO)
+            arquivosTable.create({
+                idUser: req.body.idUser,
+                tipo: 'RG',
+                arquivo: req.body.rgCandidato
+            }).then(function(){
+                //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
+                //res.send("Pagamento cadastro com sucesso!")
+            }).catch(function(erro){
+                res.send("Erro: " + erro)
+            })  
+        } else{
+            //ja possui o registro inserido recentemente no banco de dados
+        }
+    })
     
-
-    //inserir cpf OBRIGATORIO (NUNCA NULO)
-    arquivosTable.create({
-        idUser: req.body.idUser,
-        tipo: 'CPF',
-        arquivo: req.body.cpfCandidato
-    }).then(function(){
-        //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
-        //res.send("Pagamento cadastro com sucesso!")
-    }).catch(function(erro){
-        res.send("Erro: " + erro)
+    arquivosTable.findAll({
+        where: {
+            idUser: req.body.idUser,
+            tipo: 'CPF',
+            arquivo: req.body.cpfCandidato
+        }
+    }).then(function(dados){ 
+        if(dados == ''){
+            //caso não exista duplicata    
+            //inserir cpf OBRIGATORIO (NUNCA NULO)
+            arquivosTable.create({
+                idUser: req.body.idUser,
+                tipo: 'CPF',
+                arquivo: req.body.cpfCandidato
+            }).then(function(){
+                //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
+                //res.send("Pagamento cadastro com sucesso!")
+            }).catch(function(erro){
+                res.send("Erro: " + erro)
+            }) 
+        } else{
+            //ja possui o registro inserido recentemente no banco de dados
+        }
+    })
+    
+    arquivosTable.findAll({
+        where: {
+            idUser: req.body.idUser,
+            tipo: 'HISTORICO',
+            arquivo: req.body.historico
+        }
+    }).then(function(dados){ 
+        if(dados == ''){
+            //caso não exista duplicata    
+            //inserir historico OBRIGATORIO (NUNCA NULO)
+            arquivosTable.create({
+                idUser: req.body.idUser,
+                tipo: 'HISTORICO',
+                arquivo: req.body.historico
+            }).then(function(){/*vazio */}).catch(function(erro){
+                res.send("Erro: " + erro)
+            })
+        } else{
+            //ja possui o registro inserido recentemente no banco de dados
+        }
     })
 
-    //inserir historico OBRIGATORIO (NUNCA NULO)
-    arquivosTable.create({
-        idUser: req.body.idUser,
-        tipo: 'HISTORICO',
-        arquivo: req.body.historico
-    }).then(function(){/*vazio */}).catch(function(erro){
-        res.send("Erro: " + erro)
-    })
-
-    //inserir bolsa
-    if(req.body.bolsa != null && req.body.bolsa != ''){
-        arquivosTable.create({
+    arquivosTable.findAll({
+        where: {
             idUser: req.body.idUser,
             tipo: 'BOLSA',
             arquivo: req.body.bolsa
-        }).then(function(){}).catch(function(erro){
-            res.send("Erro: " + erro)
-        })
-    }
+        }
+    }).then(function(dados){ 
+        if(dados == ''){
+            //caso não exista duplicata    
+            //inserir bolsa
+            if(req.body.bolsa != null && req.body.bolsa != ''){
+                arquivosTable.create({
+                    idUser: req.body.idUser,
+                    tipo: 'BOLSA',
+                    arquivo: req.body.bolsa
+                }).then(function(){}).catch(function(erro){
+                    res.send("Erro: " + erro)
+                })
+            }
+        } else{
+            //ja possui o registro inserido recentemente no banco de dados
+        }
+    })
 
-    //inserir eja
-    if(req.body.eja != null && req.body.eja != ''){
-        arquivosTable.create({
+    arquivosTable.findAll({
+        where: {
             idUser: req.body.idUser,
             tipo: 'EJA',
             arquivo: req.body.eja
-        }).then(function(){}).catch(function(erro){
-            res.send("Erro: " + erro)
-        })
-    }
-
-    //inserir medico
-    if(req.body.medico != null && req.body.medico != ''){
-        arquivosTable.create({
+        }
+    }).then(function(dados){ 
+        if(dados == ''){
+            //caso não exista duplicata    
+            //inserir eja
+            if(req.body.eja != null && req.body.eja != ''){
+                arquivosTable.create({
+                    idUser: req.body.idUser,
+                    tipo: 'EJA',
+                    arquivo: req.body.eja
+                }).then(function(){}).catch(function(erro){
+                    res.send("Erro: " + erro)
+                })
+            }
+        } else{
+            //ja possui o registro inserido recentemente no banco de dados
+        }
+    })
+    
+    arquivosTable.findAll({
+        where: {
             idUser: req.body.idUser,
             tipo: 'MEDICO',
             arquivo: req.body.medico
-        }).then(function(){}).catch(function(erro){
-            res.send("Erro: " + erro)
-        })
-    }
+        }
+    }).then(function(dados){ 
+        if(dados == ''){
+            //caso não exista duplicata    
+            //inserir medico
+            if(req.body.medico != null && req.body.medico != ''){
+                arquivosTable.create({
+                    idUser: req.body.idUser,
+                    tipo: 'MEDICO',
+                    arquivo: req.body.medico
+                }).then(function(){}).catch(function(erro){
+                    res.send("Erro: " + erro)
+                })
+            }
+        } else{
+            //ja possui o registro inserido recentemente no banco de dados
+        }
+    })
     
-     //inserir endereco OBRIGATORIO (NUNCA NULO)
-     arquivosTable.create({
-        idUser: req.body.idUser,
-        tipo: 'ENDERECO',
-        arquivo: req.body.endereco
-    }).then(function(){}).catch(function(erro){
-        res.send("Erro: " + erro)
+    arquivosTable.findAll({
+        where: {
+            idUser: req.body.idUser,
+            tipo: 'ENDERECO',
+            arquivo: req.body.endereco
+        }
+    }).then(function(dados){ 
+        if(dados == ''){
+            //caso não exista duplicata    
+            //inserir endereco OBRIGATORIO (NUNCA NULO)
+            arquivosTable.create({
+                idUser: req.body.idUser,
+                tipo: 'ENDERECO',
+                arquivo: req.body.endereco
+            }).then(function(){}).catch(function(erro){
+                res.send("Erro: " + erro)
+            })
+        } else{
+            //ja possui o registro inserido recentemente no banco de dados
+        }
     })
 
-    //inserir cidadao OBRIGATORIO (NUNCA NULO)
-    arquivosTable.create({
-        idUser: req.body.idUser,
-        tipo: 'CIDADAO',
-        arquivo: req.body.cidadao
-    }).then(function(){}).catch(function(erro){
-        res.send("Erro: " + erro)
+    arquivosTable.findAll({
+        where: {
+            idUser: req.body.idUser,
+            tipo: 'CIDADAO',
+            arquivo: req.body.cidadao
+        }
+    }).then(function(dados){ 
+        if(dados == ''){
+            //caso não exista duplicata    
+            //inserir cidadao OBRIGATORIO (NUNCA NULO)
+            arquivosTable.create({
+                idUser: req.body.idUser,
+                tipo: 'CIDADAO',
+                arquivo: req.body.cidadao
+            }).then(function(){}).catch(function(erro){
+                res.send("Erro: " + erro)
+            })
+        } else{
+            //ja possui o registro inserido recentemente no banco de dados
+        }
     })
-
-    //inserir ensinoMedio
-    if(req.body.ensinoMedio != null && req.body.ensinoMedio != ''){
-        arquivosTable.create({
+    
+    arquivosTable.findAll({
+        where: {
             idUser: req.body.idUser,
             tipo: 'ENSINO_MEDIO',
             arquivo: req.body.ensinoMedio
-        }).then(function(){}).catch(function(erro){
-            res.send("Erro: " + erro)
-        })
-    }
-    
-    //inserir rgResponsavel
-    if(req.body.rgResponsavel != null && req.body.rgResponsavel != ''){
-        arquivosTable.create({
+        }
+    }).then(function(dados){ 
+        if(dados == ''){
+            //caso não exista duplicata    
+            //inserir ensinoMedio
+            if(req.body.ensinoMedio != null && req.body.ensinoMedio != ''){
+                arquivosTable.create({
+                    idUser: req.body.idUser,
+                    tipo: 'ENSINO_MEDIO',
+                    arquivo: req.body.ensinoMedio
+                }).then(function(){}).catch(function(erro){
+                    res.send("Erro: " + erro)
+                })
+            }
+        } else{
+            //ja possui o registro inserido recentemente no banco de dados
+        }
+    }) 
+
+    arquivosTable.findAll({
+        where: {
             idUser: req.body.idUser,
             tipo: 'RG_RESPONSAVEL',
             arquivo: req.body.rgResponsavel
-        }).then(function(){}).catch(function(erro){
-            res.send("Erro: " + erro)
-        })
-    }
-    
-    //inserir cpfResponsavel
-    if(req.body.cpfResponsavel != null && req.body.cpfResponsavel != ''){
-        arquivosTable.create({
+        }
+    }).then(function(dados){ 
+        if(dados == ''){
+            //caso não exista duplicata    
+            //inserir rgResponsavel
+            if(req.body.rgResponsavel != null && req.body.rgResponsavel != ''){
+                arquivosTable.create({
+                    idUser: req.body.idUser,
+                    tipo: 'RG_RESPONSAVEL',
+                    arquivo: req.body.rgResponsavel
+                }).then(function(){}).catch(function(erro){
+                    res.send("Erro: " + erro)
+                })
+            }
+        } else{
+            //ja possui o registro inserido recentemente no banco de dados
+        }
+    }) 
+
+    arquivosTable.findAll({
+        where: {
             idUser: req.body.idUser,
             tipo: 'CPF_RESPONSAVEL',
             arquivo: req.body.cpfResponsavel
-        }).then(function(){}).catch(function(erro){
-            res.send("Erro: " + erro)
-        })
-    }
+        }
+    }).then(function(dados){ 
+        if(dados == ''){
+            //caso não exista duplicata    
+            //inserir cpfResponsavel
+            if(req.body.cpfResponsavel != null && req.body.cpfResponsavel != ''){
+                arquivosTable.create({
+                    idUser: req.body.idUser,
+                    tipo: 'CPF_RESPONSAVEL',
+                    arquivo: req.body.cpfResponsavel
+                }).then(function(){}).catch(function(erro){
+                    res.send("Erro: " + erro)
+                })
+            }
+        } else{
+            //ja possui o registro inserido recentemente no banco de dados
+        }
+    })     
+    
+    
 
+})
+
+//CANCELA INSCRITO
+api.post('/cancelaInscrito', function(req,res){
+
+    insereUsuario.update({
+        cancelado: 1
+    },{
+        where: {
+            id: req.body.idUser
+        }
+    });
+    res.send('Inscrito cancelado com sucesso!')
+
+})
+
+//VALIDA PRIMEIRO ACESSO DO USUÁRIO
+api.post('/valida', function(req,res){
+    insereUsuario.findAll({
+        where: {
+            id: req.body.idUser,
+            codigo: req.body.codigo
+        }
+    }).then(function(dados){
+        //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
+        //res.send("Pesquisa ok!")  
+        if(dados == ''){
+           res.send("Código incorreto!") 
+           console.log("erro")
+        } else{
+            console.log(dados)
+            res.send(dados) 
+
+            //se o codigo for correto, "ativo" = 1
+            insereUsuario.update({
+                ativo: 1
+            },{
+                where: {
+                    id: req.body.idUser
+                }
+            });
+        }
+    }).catch(function(erro){
+        res.send("Erro encontrado: " + erro)
+    })
 })
 //SESSAO USUARIO CADASTRADO 
 api.post('/login', function(req,res){
@@ -547,6 +852,27 @@ api.post('/login', function(req,res){
             res.send("E-mail ou senha inválidos!") 
         } else{
             res.send(dados) 
+        }
+        
+    }).catch(function(erro){
+        res.send("Erro encontrado: " + erro)
+    })
+})
+//RECUPERAÇÃO DE SENHA
+api.post('/recuperaSenha', function(req,res){
+    //insere usuario no banco
+    insereUsuario.findAll({
+        where: {
+            email: req.body.email
+        }
+    }).then(function(dados){
+        //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
+        //res.send("Pesquisa ok!")  
+        if(dados == ''){
+            console.log("E-mail não cadastrado")
+        } else{
+            var retornoString = JSON.parse(JSON.stringify(dados))
+            mail.recuperaSenhaMail(retornoString[0].email,retornoString[0].senha,retornoString[0].nome)
         }
         
     }).catch(function(erro){
@@ -615,6 +941,8 @@ api.use("/", router);//permite utilizar a rota definida anteriormente
 
 api.use("/inscritos", listaInscritos);
 api.use("/detalhes", listaDetalhesInscrito);
+api.use("/completo", listaDadosCompletos);
+
 //api.use("/inscricao", cadastraInscrito);
 //api.use("/formulario", formInscricao);
 /*
