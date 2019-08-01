@@ -6,8 +6,8 @@ var transporter = nodemailer.createTransport({
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
-        user: 'EMAIL',
-        pass: 'SENHA'
+        user: 'devopsprog@gmail.com',
+        pass: '98111111'
     },
     tls: {
         rejectUnauthorized: false//rejeita autorização acesso ao email, talvez remover
