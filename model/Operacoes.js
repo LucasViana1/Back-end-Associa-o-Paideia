@@ -5,7 +5,7 @@ var todosInscritos = "SELECT candidatos.cpf, candidatos.cidadao, usuarios.id, us
 var dadosCandidato = "SELECT candidatos.idUser, candidatos.nome_completo, candidatos.data_nasc, candidatos.cidade_nasc, candidatos.estado_nasc, candidatos.tel1, candidatos.tel2, candidatos.cpf, candidatos.rg, candidatos.cidadao, usuarios.email, arquivos.tipo, arquivos.arquivo FROM candidatos INNER JOIN usuarios ON candidatos.idUser = usuarios.id INNER JOIN arquivos ON arquivos.idUser = usuarios.id WHERE usuarios.id = ?";
 
 //var dadosCompletos = "SELECT * FROM candidatos INNER JOIN estudos INNER JOIN usuarios INNER JOIN arquivos INNER JOIN socioeconomicos INNER JOIN valores ON usuarios.id = estudos.idUser WHERE usuarios.id = ?"
-var dadosCompletos = "SELECT * FROM candidatos INNER JOIN estudos INNER JOIN usuarios INNER JOIN socioeconomicos INNER JOIN valores ON usuarios.id = estudos.idUser WHERE usuarios.id = ?"
+var dadosCompletos = "SELECT * FROM candidatos INNER JOIN usuarios ON candidatos.idUser = usuarios.id INNER JOIN socioeconomicos ON socioeconomicos.idUser = usuarios.id INNER JOIN valores ON valores.idUser = usuarios.id INNER JOIN estudos ON estudos.idUser = usuarios.id WHERE usuarios.id = ?"
 //exportando a classe
 module.exports = class Operacoes{
     //todos os metodos implementado receberam parametros e funções de callback

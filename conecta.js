@@ -10,7 +10,8 @@ const mysql = require("mysql");
 
 let conexao = mysql.createPool({
     host: '35.184.237.68',
-    user: process.env.DBUSER,
+    //user: process.env.DBUSER,
+    user: 'root',
     password: 'B9BkPJp6xd3z',
     database: 'focus'
 });
