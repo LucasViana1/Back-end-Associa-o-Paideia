@@ -6,8 +6,8 @@ var transporter = nodemailer.createTransport({
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
-        user: 'devopsprog@gmail.com',
-        pass: '98111111'
+        user: process.env.EMAILUSER,
+        pass: process.env.EMAILPASSWORD
     },
     tls: {
         rejectUnauthorized: false//rejeita autorização acesso ao email, talvez remover
@@ -18,7 +18,7 @@ exports.cadastroMail = function(destinatario,senha,nome,codigo){
     //detalhes do email
     const mailOptions = {
         //posteriormente alterar o email adm por algum outro
-        from: 'devopsprog@gmail.com', // remetente
+        from: process.env.EMAILUSER, // remetente
         to: destinatario, // destinatario
         subject: 'Confirmação de cadastro', // assunto
         html: 
@@ -44,7 +44,7 @@ exports.cadastroMail = function(destinatario,senha,nome,codigo){
 
 exports.listaEsperaMail = function(destinatario,nome){
     const mailOptions = {
-        from: 'devopsprog@gmail.com', // remetente
+        from: process.env.EMAILUSER, // remetente
         to: destinatario,
         subject: 'CONFIRMAÇÃO DE INSCRIÇÃO', // assunto
         html: 
@@ -69,7 +69,7 @@ exports.listaEsperaMail = function(destinatario,nome){
 
 exports.listaRegularMail = function(destinatario,nome){
     const mailOptions = {
-        from: 'devopsprog@gmail.com', // remetente
+        from: process.env.EMAILUSER, // remetente
         to: destinatario,
         subject: 'CONFIRMAÇÃO DE INSCRIÇÃO', // assunto
         html: 
@@ -97,7 +97,7 @@ exports.listaRegularMail = function(destinatario,nome){
 
 exports.listaCheiaMail = function(destinatario,nome){
     const mailOptions = {
-        from: 'devopsprog@gmail.com', // remetente
+        from: process.env.EMAILUSER, // remetente
         to: destinatario,
         subject: 'VAGAS EXCEDIDAS', // assunto
         html: 
@@ -121,7 +121,7 @@ exports.recuperaSenhaMail = function(destinatario,senha,nome){
     //detalhes do email
     const mailOptions = {
         //posteriormente alterar o email adm por algum outro
-        from: 'devopsprog@gmail.com', // remetente
+        from: process.env.EMAILUSER, // remetente
         to: destinatario, // destinatario
         subject: 'RECUPERAÇÃO DE SENHA', // assunto
         html: 
