@@ -1,13 +1,17 @@
 //serviço de email temporario, posteriormente implementar em outro arquivo
 const nodemailer = require('nodemailer');
+const config = require('../dev/config')
+//credenciais email
+const remetente = process.env.EMAILUSER || config.emailUser()
+const senhaRemetente = process.env.EMAILPASSWORD || config.emailSenha()
 //serviço de transporte de email
 var transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',//smtp-relay.gmail.com
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
-        user: process.env.EMAILUSER,
-        pass: process.env.EMAILPASSWORD
+        user: remetente,
+        pass: senhaRemetente
     },
     tls: {
         rejectUnauthorized: false//rejeita autorização acesso ao email, talvez remover
@@ -18,7 +22,7 @@ exports.cadastroMail = function(destinatario,senha,nome,codigo){
     //detalhes do email
     const mailOptions = {
         //posteriormente alterar o email adm por algum outro
-        from: process.env.EMAILUSER, // remetente
+        from: remetente,
         to: destinatario, // destinatario
         subject: 'Confirmação de cadastro', // assunto
         html: 
@@ -42,16 +46,16 @@ exports.cadastroMail = function(destinatario,senha,nome,codigo){
     });
 }
 
-exports.listaEsperaMail = function(destinatario,nome){
+exports.listaEsperaMail = function(destinatario,nome,matricula){
     const mailOptions = {
-        from: process.env.EMAILUSER, // remetente
+        from: remetente,
         to: destinatario,
         subject: 'CONFIRMAÇÃO DE INSCRIÇÃO', // assunto
         html: 
         '<h2>Olá '+nome+'!</h2><br>'+
         '<p>Sua inscrição para o segundo semestre de 2019 foi efetuada com sucesso e sua inscrição consta na lista de espera '+
         '(lembramos que você precisa participar de todas as etapas igualmente).</p>'+
-        '<p>Seu número de matrícula é: 0000 (INSERIR VALOR CORRETO). </p><br>'+
+        '<p>Seu número de matrícula é: '+matricula+'. </p><br>'+
         'Em anexo o termo de responsabilidade, que deverá ser entregue impresso no dia da entrevista.',
         attachments: {
            path: __dirname + "/termo_responsabilidade.pdf"
@@ -67,15 +71,15 @@ exports.listaEsperaMail = function(destinatario,nome){
 
 }
 
-exports.listaRegularMail = function(destinatario,nome){
+exports.listaRegularMail = function(destinatario,nome,matricula){
     const mailOptions = {
-        from: process.env.EMAILUSER, // remetente
+        from: remetente, 
         to: destinatario,
         subject: 'CONFIRMAÇÃO DE INSCRIÇÃO', // assunto
         html: 
         '<h2>Olá '+nome+'!</h2><br>'+
         '<p>Sua inscrição para o segundo semestre de 2019 foi efetuada com sucesso e sua inscrição consta na lista regular.</p>'+
-        '<p>Seu número de matrícula é: 0000 (INSERIR VALOR CORRETO). </p><br>'+
+        '<p>Seu número de matrícula é: '+matricula+'. </p><br>'+
         'Em anexo o termo de responsabilidade, que deverá ser entregue impresso no dia da entrevista.',
         attachments: {
            path: __dirname + "/termo_responsabilidade.pdf"
@@ -97,7 +101,7 @@ exports.listaRegularMail = function(destinatario,nome){
 
 exports.listaCheiaMail = function(destinatario,nome){
     const mailOptions = {
-        from: process.env.EMAILUSER, // remetente
+        from: remetente,
         to: destinatario,
         subject: 'VAGAS EXCEDIDAS', // assunto
         html: 
@@ -121,7 +125,7 @@ exports.recuperaSenhaMail = function(destinatario,senha,nome){
     //detalhes do email
     const mailOptions = {
         //posteriormente alterar o email adm por algum outro
-        from: process.env.EMAILUSER, // remetente
+        from: remetente,
         to: destinatario, // destinatario
         subject: 'RECUPERAÇÃO DE SENHA', // assunto
         html: 
