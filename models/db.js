@@ -1,19 +1,12 @@
 const Sequelize = require("sequelize")
 
-/*const sequelize = new Sequelize('focus', 'root', '',{
-    host: 'localhost',
-    dialect: 'mysql',
-    timezone: 'America/Sao_Paulo'
-})*/
+const banco = process.env.DBDATABASE || 'focus'
+const user = process.env.DBUSER || 'root'
+const senha = process.env.DBPASSWORD 
+const server = process.env.DBHOST || 'localhost'
 
-/*const sequelize = new Sequelize('focus', 'root', 'B9BkPJp6xd3z',{
-    host: '35.184.237.68',
-    dialect: 'mysql',
-    timezone: 'America/Sao_Paulo'
-})*/
-
-const sequelize = new Sequelize(process.env.DBDATABASE, process.env.DBUSER, process.env.DBPASSWORD,{
-    host: process.env.DBHOST,
+const sequelize = new Sequelize(banco, user, senha,{
+    host: server,
     dialect: 'mysql',
     timezone: 'America/Sao_Paulo'
 })

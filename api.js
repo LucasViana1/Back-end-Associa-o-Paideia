@@ -548,7 +548,7 @@ api.post('/insereDadosValores', function(req,res){
                         console.log("qtd inscritos: "+qtd)
                         let matricula = parseInt(retornoString[0].id)
                         matricula = matricula + 1935
-                        //79
+                        //79 
                         if(qtd <= 2){
                             //lista regular: email lista regular, "inscrito_atual" = 1, "espera" = 0
                             insereUsuario.update({
@@ -565,6 +565,7 @@ api.post('/insereDadosValores', function(req,res){
                             mail.listaRegularMail(retornoString[0].email, retornoString[0].nome, matricula)
                             //console.log("Numero de matricula: "+matricula)
                         }
+                        //3 regular, 2 espera, 5 total (TESTE EM HOMOLOGAÇÃO)
                         //79, 119
                         else if(qtd > 2 && qtd <= 4){
                             //lista de espera: email lista espera, "inscrito_atual" = 1, "espera" = 1

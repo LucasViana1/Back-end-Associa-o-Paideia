@@ -1,22 +1,15 @@
 const mysql = require("mysql");
 
-//pool de conexoes ao banco gerenciados pelo mysql
-/*let conexao = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'focus'
-});*/
+const banco = process.env.DBDATABASE || 'focus'
+const usuario = process.env.DBUSER || 'root'
+const senha = process.env.DBPASSWORD 
+const server = process.env.DBHOST || 'localhost'
 
 let conexao = mysql.createPool({
-    /*host: '35.184.237.68',
-    user: 'root',
-    password: 'B9BkPJp6xd3z',
-    database: 'focus'*/
-    host: process.env.DBHOST,
-    user: process.env.DBUSER,
-    password: process.env.DBPASSWORD,
-    database: process.env.DBDATABASE
+    host: server,
+    user: usuario,
+    password: senha,
+    database: banco
 });
 
 
