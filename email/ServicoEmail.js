@@ -1,9 +1,11 @@
 //serviço de email temporario, posteriormente implementar em outro arquivo
 const nodemailer = require('nodemailer');
-const config = require('../dev/config')
-//credenciais email
-const remetente = process.env.EMAILUSER || config.emailUser()
-const senhaRemetente = process.env.EMAILPASSWORD || config.emailSenha()
+//const config = require('../dev/config')
+//credenciais email AJUSTAR PARA DEV
+//const remetente = process.env.EMAILUSER || config.emailUser()
+//const senhaRemetente = process.env.EMAILPASSWORD || config.emailSenha()
+const remetente = process.env.EMAILUSER
+const senhaRemetente = process.env.EMAILPASSWORD
 //serviço de transporte de email
 var transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',//smtp-relay.gmail.com
