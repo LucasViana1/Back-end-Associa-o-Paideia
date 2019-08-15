@@ -4,7 +4,8 @@
   "description": "Back-end paideia",
   "main": "api.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node api.js"
   },
   "author": "Lucas Viana Cunha <lucasviana112@gmail.com>",
   "license": "MIT",
