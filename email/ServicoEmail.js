@@ -24,7 +24,7 @@ exports.cadastroMail = function(destinatario,senha,nome,codigo){
         //posteriormente alterar o email adm por algum outro
         from: remetente,
         to: destinatario, // destinatario
-        subject: 'Confirmação de cadastro', // assunto
+        subject: 'CONFIRMAÇÃO DE CADASTRO', // assunto
         html: 
         '<h1>Olá '+nome+'!</h1>'+
         '<h2>Seu cadastro ao Sistema da Associação Paideia foi realizado com sucesso!</h2><br>'+
