@@ -37,7 +37,7 @@ exports.cadastroMail = function(destinatario,senha,nome,codigo){
             '<p><b>Senha: </b>'+senha+'</p>'+
             '<p><b>Código (para válidar o primeiro acesso): </b>'+codigo+'</p>'+
         '<br>'+
-        '<h3>Acesse através do link: <a href="http://localhost:8080/login">http://localhost:8080/login</a></h3>'
+        '<h3>Acesse através do link: <a href="https://www.associacaopaideia.org.br/#/login">https://www.associacaopaideia.org.br/#/login</a></h3>'
     };
     //envia efetivamente o email com base nas configurações anteriores
     transporter.sendMail(mailOptions, function (err, info) {
@@ -136,7 +136,7 @@ exports.recuperaSenhaMail = function(destinatario,senha,nome){
             '<p><b>Login: </b>'+destinatario+'</p>'+
             '<p><b>Senha: </b>'+senha+'</p>'+
         '<br>'+
-        '<h3>Acesse através do link: <a href="http://localhost:8080/login">http://localhost:8080/login</a></h3>'
+        '<h3>Acesse através do link: <a href="https://www.associacaopaideia.org.br/#/login">https://www.associacaopaideia.org.br/#/login</a></h3>'
     };
     //envia efetivamente o email com base nas configurações anteriores
     transporter.sendMail(mailOptions, function (err, info) {
