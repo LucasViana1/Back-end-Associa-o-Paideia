@@ -6,6 +6,7 @@ const nodemailer = require('nodemailer');
 //const senhaRemetente = process.env.EMAILPASSWORD || config.emailSenha()
 const remetente = process.env.EMAILUSER
 const senhaRemetente = process.env.EMAILPASSWORD
+const respAuto = "<p>Favor não responder esse E-mail, se quiser entrar em contato conosco utilize o E-mail <em>contato@associacaopaideia.org.br</em></p>";
 //serviço de transporte de email
 var transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',//smtp-relay.gmail.com
@@ -37,7 +38,9 @@ exports.cadastroMail = function(destinatario,senha,nome,codigo){
             '<p><b>Senha: </b>'+senha+'</p>'+
             '<p><b>Código (para válidar o primeiro acesso): </b>'+codigo+'</p>'+
         '<br>'+
-        '<h3>Acesse através do link: <a href="https://www.associacaopaideia.org.br/#/login">https://www.associacaopaideia.org.br/#/login</a></h3>'
+        '<h3>Acesse através do link: <a href="https://www.associacaopaideia.org.br/#/login">https://www.associacaopaideia.org.br/#/login</a></h3>'+
+        '<br>'+
+        respAuto
     };
     //envia efetivamente o email com base nas configurações anteriores
     transporter.sendMail(mailOptions, function (err, info) {
@@ -58,7 +61,10 @@ exports.listaEsperaMail = function(destinatario,nome,matricula){
         '<p>Sua inscrição para o segundo semestre de 2019 foi efetuada com sucesso e sua inscrição consta na lista de espera '+
         '(lembramos que você precisa participar de todas as etapas igualmente).</p>'+
         '<p>Seu número de matrícula é: '+matricula+'. </p><br>'+
-        'Em anexo o termo de responsabilidade, que deverá ser entregue impresso no dia da entrevista.',
+        'Em anexo o termo de responsabilidade, que deverá ser entregue impresso no dia da entrevista.'+
+        '<br>'+
+        respAuto,
+        
         attachments: {
            path: __dirname + "/termo_responsabilidade.pdf"
         }      
@@ -82,7 +88,9 @@ exports.listaRegularMail = function(destinatario,nome,matricula){
         '<h2>Olá '+nome+'!</h2><br>'+
         '<p>Sua inscrição para o segundo semestre de 2019 foi efetuada com sucesso e sua inscrição consta na lista regular.</p>'+
         '<p>Seu número de matrícula é: '+matricula+' </p><br>'+
-        'Em anexo o termo de responsabilidade, que deverá ser entregue impresso no dia da entrevista.',
+        'Em anexo o termo de responsabilidade, que deverá ser entregue impresso no dia da entrevista.'+
+        '<br>'+
+        respAuto,
         attachments: {
            path: __dirname + "/termo_responsabilidade.pdf"
         }
@@ -108,7 +116,9 @@ exports.listaCheiaMail = function(destinatario,nome){
         subject: 'VAGAS EXCEDIDAS', // assunto
         html: 
         '<h2>Olá '+nome+'!</h2><br>'+
-        '<p>Desculpe mas sua matrícula não pode ser concluída pelo fato de todas as vagas já terem sido preenchidas, tente novamente no próximo semestre.</p>'      
+        '<p>Desculpe mas sua matrícula não pode ser concluída pelo fato de todas as vagas já terem sido preenchidas, tente novamente no próximo semestre.</p>'+
+        '<br>'+
+        respAuto      
     };
     //envia efetivamente o email com base nas configurações anteriores
     transporter.sendMail(mailOptions, function (err, info) {
@@ -136,7 +146,9 @@ exports.recuperaSenhaMail = function(destinatario,senha,nome){
             '<p><b>Login: </b>'+destinatario+'</p>'+
             '<p><b>Senha: </b>'+senha+'</p>'+
         '<br>'+
-        '<h3>Acesse através do link: <a href="https://www.associacaopaideia.org.br/#/login">https://www.associacaopaideia.org.br/#/login</a></h3>'
+        '<h3>Acesse através do link: <a href="https://www.associacaopaideia.org.br/#/login">https://www.associacaopaideia.org.br/#/login</a></h3>'+
+        '<br>'+
+        respAuto
     };
     //envia efetivamente o email com base nas configurações anteriores
     transporter.sendMail(mailOptions, function (err, info) {
