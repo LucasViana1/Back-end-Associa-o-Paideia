@@ -81,7 +81,7 @@ exports.listaRegularMail = function(destinatario,nome,matricula){
         html: 
         '<h2>Olá '+nome+'!</h2><br>'+
         '<p>Sua inscrição para o segundo semestre de 2019 foi efetuada com sucesso e sua inscrição consta na lista regular.</p>'+
-        '<p>Seu número de matrícula é: '+matricula+'. </p><br>'+
+        '<p>Seu número de matrícula é: '+matricula+' </p><br>'+
         'Em anexo o termo de responsabilidade, que deverá ser entregue impresso no dia da entrevista.',
         attachments: {
            path: __dirname + "/termo_responsabilidade.pdf"
