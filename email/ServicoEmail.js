@@ -8,11 +8,9 @@ const remetente = process.env.EMAILUSER
 const senhaRemetente = process.env.EMAILPASSWORD
 //serviço de transporte de email
 var transporter = nodemailer.createTransport({
-    /*host: 'smtp.gmail.com',//smtp-relay.gmail.com
-    port: 587,*/
-    host: 'smtp-relay.gmail.com',
-    port: 465,
-    secure: true, // true for 465, false for other ports
+    host: 'smtp.gmail.com',//smtp-relay.gmail.com
+    port: 587,
+    secure: false, // true for 465, false for other ports
     auth: {
         user: remetente,
         pass: senhaRemetente
