@@ -548,8 +548,8 @@ api.post('/insereDadosValores', function(req,res){
                         console.log("qtd inscritos: "+qtd)
                         let matricula = parseInt(retornoString[0].id)
                         matricula = matricula + 1935
-                        //79 
-                        if(qtd <= 2){
+                        //79 ou 2
+                        if(qtd <= 79){
                             //lista regular: email lista regular, "inscrito_atual" = 1, "espera" = 0
                             insereUsuario.update({
                                 inscrito_atual: 1,
@@ -565,9 +565,9 @@ api.post('/insereDadosValores', function(req,res){
                             mail.listaRegularMail(retornoString[0].email, retornoString[0].nome, matricula)
                             //console.log("Numero de matricula: "+matricula)
                         }
-                        //3 regular, 2 espera, 5 total (TESTE EM HOMOLOGAÇÃO)
-                        //79, 119
-                        else if(qtd > 2 && qtd <= 4){
+                        //3 (80) regular, 2 (40) espera, 5 (120) total (TESTE EM HOMOLOGAÇÃO)
+                        //79 (2), 119 (4)
+                        else if(qtd > 79 && qtd <= 119){
                             //lista de espera: email lista espera, "inscrito_atual" = 1, "espera" = 1
                             insereUsuario.update({
                                 inscrito_atual: 1,
@@ -582,8 +582,8 @@ api.post('/insereDadosValores', function(req,res){
                             mail.listaEsperaMail(retornoString[0].email, retornoString[0].nome, matricula)
                             
                             //se for o 120º candidato, tabela "controle" é marcada e as inscrições são travadas
-                            //119
-                            if(qtd == 4){
+                            //119 (4)
+                            if(qtd == 119){
                                 controleTable.update({
                                     fim: 1
                                 },{
@@ -610,7 +610,6 @@ api.post('/insereDadosValores', function(req,res){
             
         } else{
             //ja possui o registro inserido recentemente no banco de dados
-            console.log("aqui!")
             console.log(dadosVerifica)
         }
     })
@@ -680,7 +679,7 @@ api.post('/insereDadosArquivos', function(req,res){
             arquivosTable.update({
                 idUser: req.body.idUser,
                 tipo: 'RG',
-                arquivo: req.body.foto
+                arquivo: req.body.rgCandidato
             },{
                 where: {
                     idUser: req.body.idUser,
@@ -714,7 +713,7 @@ api.post('/insereDadosArquivos', function(req,res){
             arquivosTable.update({
                 idUser: req.body.idUser,
                 tipo: 'CPF',
-                arquivo: req.body.foto
+                arquivo: req.body.cpfCandidato
             },{
                 where: {
                     idUser: req.body.idUser,
@@ -745,7 +744,7 @@ api.post('/insereDadosArquivos', function(req,res){
             arquivosTable.update({
                 idUser: req.body.idUser,
                 tipo: 'HISTORICO',
-                arquivo: req.body.foto
+                arquivo: req.body.historico
             },{
                 where: {
                     idUser: req.body.idUser,
@@ -778,7 +777,7 @@ api.post('/insereDadosArquivos', function(req,res){
             arquivosTable.update({
                 idUser: req.body.idUser,
                 tipo: 'BOLSA',
-                arquivo: req.body.foto
+                arquivo: req.body.bolsa
             },{
                 where: {
                     idUser: req.body.idUser,
@@ -811,7 +810,7 @@ api.post('/insereDadosArquivos', function(req,res){
             arquivosTable.update({
                 idUser: req.body.idUser,
                 tipo: 'EJA',
-                arquivo: req.body.foto
+                arquivo: req.body.eja
             },{
                 where: {
                     idUser: req.body.idUser,
@@ -844,7 +843,7 @@ api.post('/insereDadosArquivos', function(req,res){
             arquivosTable.update({
                 idUser: req.body.idUser,
                 tipo: 'MEDICO',
-                arquivo: req.body.foto
+                arquivo: req.body.medico
             },{
                 where: {
                     idUser: req.body.idUser,
@@ -875,7 +874,7 @@ api.post('/insereDadosArquivos', function(req,res){
             arquivosTable.update({
                 idUser: req.body.idUser,
                 tipo: 'ENDERECO',
-                arquivo: req.body.foto
+                arquivo: req.body.endereco
             },{
                 where: {
                     idUser: req.body.idUser,
@@ -906,7 +905,7 @@ api.post('/insereDadosArquivos', function(req,res){
             arquivosTable.update({
                 idUser: req.body.idUser,
                 tipo: 'CIDADAO',
-                arquivo: req.body.foto
+                arquivo: req.body.cidadao
             },{
                 where: {
                     idUser: req.body.idUser,
@@ -939,7 +938,7 @@ api.post('/insereDadosArquivos', function(req,res){
             arquivosTable.update({
                 idUser: req.body.idUser,
                 tipo: 'ENSINO_MEDIO',
-                arquivo: req.body.foto
+                arquivo: req.body.ensinoMedio
             },{
                 where: {
                     idUser: req.body.idUser,
@@ -972,7 +971,7 @@ api.post('/insereDadosArquivos', function(req,res){
             arquivosTable.update({
                 idUser: req.body.idUser,
                 tipo: 'RG_RESPONSAVEL',
-                arquivo: req.body.foto
+                arquivo: req.body.rgResponsavel
             },{
                 where: {
                     idUser: req.body.idUser,
@@ -1005,7 +1004,7 @@ api.post('/insereDadosArquivos', function(req,res){
             arquivosTable.update({
                 idUser: req.body.idUser,
                 tipo: 'CPF_RESPONSAVEL',
-                arquivo: req.body.foto
+                arquivo: req.body.cpfResponsavel
             },{
                 where: {
                     idUser: req.body.idUser,
