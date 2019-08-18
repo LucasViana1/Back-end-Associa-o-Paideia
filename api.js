@@ -420,7 +420,8 @@ api.post('/insereDadosEstudos', function(req,res){
                 comvest: req.body.comvest,
                 vunesp: req.body.vunesp,
                 enem: req.body.enem,
-                fatec: req.body.fatec
+                fatec: req.body.fatec,
+                outro_curso_uni: req.body.outro_curso_uni
 
             }).then(function(){
                 //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso

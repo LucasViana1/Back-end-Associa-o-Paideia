@@ -66,6 +66,9 @@ const Estudos = db.sequelize.define('estudos', {
     },
     fatec: {
         type: db.Sequelize.STRING
+    },
+    outro_curso_uni: {
+        type: db.Sequelize.STRING
     }
   
 })
