@@ -40,8 +40,14 @@ const Estudos = db.sequelize.define('estudos', {
     superior: {
         type: db.Sequelize.STRING
     },
-    area_desejo: {
-        type: db.Sequelize.STRING
+    biologica: {
+        type: db.Sequelize.TINYINT
+    },
+    exatas: {
+        type: db.Sequelize.TINYINT
+    },
+    humanas: {
+        type: db.Sequelize.TINYINT
     },
     curso_univ1: {
         type: db.Sequelize.STRING
