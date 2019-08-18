@@ -61,7 +61,7 @@ exports.listaEsperaMail = function(destinatario,nome,matricula){
         '<p>Sua inscrição para o segundo semestre de 2019 foi efetuada com sucesso e sua inscrição consta na lista de espera '+
         '(lembramos que você precisa participar de todas as etapas igualmente).</p>'+
         '<p>Seu número de matrícula é: '+matricula+'. </p><br>'+
-        'Em anexo o termo de responsabilidade, que deverá ser entregue impresso no dia da entrevista.'+
+        'Em anexo o termo de responsabilidade, que deverá ser entregue impresso no dia da reunião de confirmação'+
         '<br>'+
         respAuto,
         
@@ -88,7 +88,7 @@ exports.listaRegularMail = function(destinatario,nome,matricula){
         '<h2>Olá '+nome+'!</h2><br>'+
         '<p>Sua inscrição para o segundo semestre de 2019 foi efetuada com sucesso e sua inscrição consta na lista regular.</p>'+
         '<p>Seu número de matrícula é: '+matricula+' </p><br>'+
-        'Em anexo o termo de responsabilidade, que deverá ser entregue impresso no dia da entrevista.'+
+        'Em anexo o termo de responsabilidade, que deverá ser entregue impresso no dia da reunião de confirmação.'+
         '<br>'+
         respAuto,
         attachments: {
