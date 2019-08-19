@@ -548,7 +548,7 @@ api.post('/insereDadosValores', function(req,res){
                             if(element.cancelado == null){
                                 qtd++
                             }
-                            //SE FOR CANCELADO, NAO USAR qtd++
+
                         });  
                         console.log('total: '+qtd) 
 
