@@ -109,6 +109,47 @@ exports.listaRegularMail = function(destinatario,nome,matricula){
 
 }
 
+exports.cancelaInscricao = function(destinatario){
+    const mailOptions = {
+        from: remetente, 
+        to: destinatario,
+        subject: 'INSCRIÇÃO CANCELADA', // assunto
+        html: 
+        '<h2>Caro (a) candidato (a).</h2><br>'+
+        '<p>Verificamos em nosso sistema que você não executou corretamente alguns dos passos necessários para efetivar sua inscrição, podendo ser:</p> '+
+        '<ul>'+
+        '<li>Cópia do RG, CPF e uma fotografia recente 3x4 do (a) candidato (a) – pode utilizar uma “selfie” com boa qualidade e luz;</li>'+
+        '<li>Cópia do RG e CPF dos responsáveis legais (menores de 18 anos);</li>'+
+        '<li>Cópia do Termo de Responsabilidade em duas vias, assinado pelo (a) candidato (a) ou pelos responsáveis legais, quando menor de 18 anos de idade (necessário apenas à impressão e entrega na data da entrevista);</li>'+
+        '<li>Cópia do Comprovante de endereço (conta de luz, água, telefone, aluguel, IPTU e IPVA), desde que seja atualizado (último mês vigente ou do ano vigente de 2019);</li>'+
+        '<li>Cópia do Cartão Cidadão (folha individual);</li>'+
+        '<li>Comprovante de matrícula do Ensino Médio, se o candidato estiver cursando ou Certificado de Conclusão, se já concluiu;</li>'+
+        '<li>Histórico escolar do Ensino Médio;</li>'+
+        '<li>Boleto ou Atestado que comprove Bolsa no Ensino Médio (no caso de alunos bolsistas de Escolas Particulares);</li>'+
+        '<li>Comprovante de matrícula no terceiro termo do EJA (Ensino de Jovens e Adultos);</li>'+
+        '</ul>'+
+
+        '<br>'+
+        '<p>Pedimos para que entre com contato conosco pelo e-mail e tire suas dúvidas: contato@associacaopaideia.org.br.</p>'+
+        '<br>'+
+        'Atenciosamente,'+
+        'Focus Cursinho.',
+
+        
+    };
+    //envia efetivamente o email com base nas configurações anteriores
+    transporter.sendMail(mailOptions, function (err, info) {
+        if(err){
+            console.log("Erro gerado: " + err)
+            //console.log("destinatario: "+destinatario)
+            //console.log("nome: "+nome)
+        }   
+        else
+            console.log("Info gerado: " + info);
+    });
+
+}
+
 exports.listaCheiaMail = function(destinatario,nome){
     const mailOptions = {
         from: remetente,
