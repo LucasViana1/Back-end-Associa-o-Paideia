@@ -449,7 +449,10 @@ api.post('/insereDadosEstudos', function(req,res){
                 cursinho_particular: req.body.cursinho_particular,
                 fez_vestibular: req.body.fez_vestibular,
                 superior: req.body.superior,
-                area_desejo: req.body.area_desejo,
+                //area_desejo: req.body.area_desejo,
+                biologica: req.body.biologica,
+                exatas: req.body.exatas,
+                humanas: req.body.humanas,
                 curso_univ1: req.body.curso_univ1,
                 curso_univ2: req.body.curso_univ2,
                 curso_univ3: req.body.curso_univ3,
@@ -541,8 +544,11 @@ api.post('/insereDadosValores', function(req,res){
                     operacoes.getQtdInscritos(function(error, retorno){
                         //console.log("retorno: "+retorno[0].id)  
                         retorno.forEach(element => {
-                            console.log("retorno: "+element.id)
-                            qtd++
+                            console.log("retorno: "+element.cancelado)
+                            if(element.cancelado == null){
+                                qtd++
+                            }
+                            //SE FOR CANCELADO, NAO USAR qtd++
                         });  
                         console.log('total: '+qtd) 
 
@@ -592,7 +598,7 @@ api.post('/insereDadosValores', function(req,res){
                                     fim: 1
                                 },{
                                     where: {
-                                    id: 1
+                                        id: 1
                                     }
                                 });
                             }
@@ -1032,6 +1038,21 @@ api.post('/cancelaInscrito', function(req,res){
             id: req.body.idUser
         }
     });
+
+    insereUsuario.findAll({
+        where: {
+            id: req.body.idUser
+        }
+    }).then(function(dados){      
+        //console.log(dados)
+        //res.send(dados) 
+        var retorno = JSON.parse(JSON.stringify(dados))
+        console.log('email inscrito cancelado: '+retorno[0].email)
+        mail.cancelaInscricao(retorno[0].email)
+        
+    }).catch(function(erro){res.send("Erro encontrado: " + erro)})
+
+    
     res.send('Inscrito cancelado com sucesso!')
 
 })
