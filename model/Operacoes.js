@@ -1,6 +1,6 @@
 //camada model do projeto, possui as operações que podem ser realizadas
 const db = require("../conecta");//credenciais de conexao ao banco
-var todosInscritos = "SELECT candidatos.cpf, candidatos.cidadao, usuarios.id, usuarios.nome, usuarios.email, usuarios.espera, usuarios.cancelado FROM candidatos INNER JOIN usuarios ON candidatos.idUser = usuarios.id WHERE usuarios.inscrito_atual = 1";
+var todosInscritos = "SELECT candidatos.cpf, candidatos.cidadao, usuarios.id, usuarios.nome, usuarios.email, usuarios.espera, usuarios.cancelado, usuarios.matricula FROM candidatos INNER JOIN usuarios ON candidatos.idUser = usuarios.id WHERE usuarios.inscrito_atual = 1";
 
 var dadosCandidato = "SELECT candidatos.idUser, candidatos.nome_completo, candidatos.data_nasc, candidatos.cidade_nasc, candidatos.estado_nasc, candidatos.tel1, candidatos.tel2, candidatos.cpf, candidatos.rg, candidatos.cidadao, usuarios.email, arquivos.tipo, arquivos.arquivo FROM candidatos INNER JOIN usuarios ON candidatos.idUser = usuarios.id INNER JOIN arquivos ON arquivos.idUser = usuarios.id WHERE usuarios.id = ?";
 
