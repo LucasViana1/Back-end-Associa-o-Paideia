@@ -6,6 +6,13 @@ var dadosCandidato = "SELECT candidatos.idUser, candidatos.nome_completo, candid
 
 //var dadosCompletos = "SELECT * FROM candidatos INNER JOIN estudos INNER JOIN usuarios INNER JOIN arquivos INNER JOIN socioeconomicos INNER JOIN valores ON usuarios.id = estudos.idUser WHERE usuarios.id = ?"
 var dadosCompletos = "SELECT * FROM candidatos INNER JOIN usuarios ON candidatos.idUser = usuarios.id INNER JOIN socioeconomicos ON socioeconomicos.idUser = usuarios.id INNER JOIN valores ON valores.idUser = usuarios.id INNER JOIN estudos ON estudos.idUser = usuarios.id WHERE usuarios.id = ?"
+var dadosGabaritos = "SELECT count(*) AS qtdPerguntas FROM gabaritos where modelo = 1"
+//var checagemSimulado = "SELECT * FROM gabaritos g INNER JOIN simulados s on g.modelo = s.modelo and g.pergunta = s.pergunta WHERE s.idUser = ? ORDER BY g.pergunta DESC"
+//var checagemSimulado = "SELECT * FROM gabaritos g INNER JOIN simulados s on g.modelo = s.modelo and g.pergunta = s.pergunta + 1 WHERE s.idUser = ? ORDER BY g.pergunta DESC"
+var checagemSimulado = "SELECT g.modelo,g.materia,g.pergunta,g.enunciado,g.resp_a,g.resp_b,g.resp_c,g.resp_d,g.resp_e,g.img,s.idUser FROM gabaritos g LEFT JOIN simulados s on g.modelo = s.modelo and g.pergunta = s.pergunta + 1 WHERE s.idUser = 28 ORDER BY g.pergunta DESC"
+var simuladoQ1 = "SELECT g.modelo,g.materia,g.pergunta,g.enunciado,g.resp_a,g.resp_b,g.resp_c,g.resp_d,g.resp_e,g.img FROM gabaritos g WHERE modelo = ? ORDER BY pergunta"
+
+
 //exportando a classe
 module.exports = class Operacoes{
     //todos os metodos implementado receberam parametros e funções de callback
@@ -27,8 +34,15 @@ module.exports = class Operacoes{
     }
     static insereInscrito(dados, callback){
         console.log(dados.nome);
-        return db.query("INSERT INTO inscritos (nome,email,senha) VALUES(?,?,?)", [dados.nome, dados.email, dados.senha], callback);
-        
-        
+        return db.query("INSERT INTO inscritos (nome,email,senha) VALUES(?,?,?)", [dados.nome, dados.email, dados.senha], callback);  
+    }
+    static getQtdPerguntasSimulado(callback){
+        return db.query(dadosGabaritos , callback);//depois implementar clausula WHERE
+    }
+    static getSimulado(id, callback){
+        return db.query(checagemSimulado, [id], callback);//depois implementar clausula WHERE
+    }
+    static getSimuladoQ1(id, callback){
+        return db.query(simuladoQ1, [id], callback);//nesse caso id = nº modelo
     }
 }

@@ -11,6 +11,9 @@ const formInscricao = require("./rotas/formInscricao");
 const listaInscritos = require("./rotas/listaInscritos");
 const listaDetalhesInscrito = require("./rotas/listaDetalhesInscrito");
 const listaDadosCompletos = require("./rotas/listaDadosCompletos");
+const listaGabarito = require("./rotas/listaGabarito")
+const perguntaSimulado = require("./rotas/perguntaSimulado")
+const perguntaSimuladoQ1 = require("./rotas/perguntaSimuladoQ1")
 
 //"use" trabalha as requisições conforme a demanda
 api.use(cors());//trata requisições que não é da mesma origem que a API
@@ -32,6 +35,8 @@ const estudosTable = require("./models/EstudosTable")
 const valoresTable = require("./models/ValoresTable")
 const arquivosTable = require("./models/ArquivosTable")
 const controleTable = require("./models/ControleTable")
+const gabaritoTable = require("./models/GabaritosTable")
+const simuladoTable = require("./models/SimuladoTable")
 
 const operacoes = require("./model/Operacoes")
 
@@ -1159,6 +1164,131 @@ api.get('/inscricao', function(req,res){
     //res.send('teste')
 })
 
+api.post('/cadastraSimulado', function(req,res){
+    //variaveis recebem requisição para facilitar organização/entendimento
+    let alternativaCerta = req.body.correta
+    let numeroPergunta = req.body.pergunta
+    let diciplina = req.body.materia
+    let questao = req.body.enunciado
+    let A = req.body.resp_a
+    let B = req.body.resp_b
+    let C = req.body.resp_c
+    let D = req.body.resp_d
+    let E = req.body.resp_e
+
+    function proximaLetra(letra){
+        let proxima = letra;
+        switch(proxima){
+            case 'a':
+                proxima = 'b'; break;
+            case 'b':
+                proxima = 'c'; break;
+            case 'c':
+                proxima = 'd'; break;
+            case 'd':
+                proxima = 'e'; break;
+            case 'e':
+                proxima = 'a'; break;
+        }
+        return proxima
+    }
+    let certaModelo1 = alternativaCerta
+    let certaModelo2 = proximaLetra(certaModelo1)
+    let certaModelo3 = proximaLetra(certaModelo2)
+    let certaModelo4 = proximaLetra(certaModelo3)
+
+    //ordem conforme foi cadastrada
+    gabaritoTable.create({
+        modelo: 1,pergunta: numeroPergunta,materia: diciplina,enunciado: questao,
+        resp_a: A, resp_b: B, resp_c: C, resp_d: D, resp_e: E, correta: certaModelo1, img: req.body.img
+    })
+    //andando UMA casa da esq p/ dir
+    gabaritoTable.create({
+        modelo: 2,pergunta: numeroPergunta,materia: diciplina,enunciado: questao,
+        resp_a: E, resp_b: A, resp_c: B, resp_d: C, resp_e: D, correta: certaModelo2, img: req.body.img
+    })
+    //andando DUAS da esq p/ dir
+    gabaritoTable.create({
+        modelo: 3,pergunta: numeroPergunta,materia: diciplina,enunciado: questao,
+        resp_a: D, resp_b: E, resp_c: A, resp_d: B, resp_e: C, correta: certaModelo3, img: req.body.img
+    })
+    //andando TRES da esq p/ dir
+    gabaritoTable.create({
+        modelo: 4,pergunta: numeroPergunta,materia: diciplina,enunciado: questao,
+        resp_a: C, resp_b: D, resp_c: E, resp_d: A, resp_e: B, correta: certaModelo4, img: req.body.img
+    })
+})
+
+api.post('/simulado', function(req,res){
+    //verificar se aluno acertou questao
+    gabaritoTable.findAll({
+        where: {
+            //modelo prova e nº pergunta
+            modelo: req.body.modelo,
+            pergunta: req.body.pergunta
+        }
+    }).then(function(dados){ 
+        if(dados == ''){
+            res.send("Sem retorno dos dados gabarito/simulado") 
+        } else{
+            //se encontrado a pergunta no banco, é comparada com a resposta do aluno e verificado se está correta
+             
+            var retornoString = JSON.parse(JSON.stringify(dados))
+            console.log('questao correta do gabarito: '+retornoString[0].correta)
+            var correto = ''
+            if(retornoString[0].correta == req.body.selecionado){
+                console.log("acertou")
+                correto = 's'
+                console.log(": "+correto)
+            }
+            else{
+                console.log("errou")
+                correto = 'n'
+                console.log(": "+correto)
+            }
+            simuladoTable.create({
+                idUser: req.body.idUser,
+                modelo: req.body.modelo,
+                pergunta: req.body.pergunta,
+                selecionado: req.body.selecionado,
+                acertou: correto
+            })   
+            res.send(correto)
+        }    
+    }).catch(function(erro){
+        res.send("Erro encontrado: " + erro)
+    })
+
+})
+
+/*api.post('/gabarito', function(req,res){
+    //verificar se aluno acertou questao
+    gabaritoTable.findAll({
+        where: {
+            //modelo prova e nº pergunta
+            modelo: req.body.modelo,
+            pergunta: req.body.pergunta
+        }
+    }).then(function(dados){ 
+        if(dados == ''){
+            res.send("Sem retorno dos dados gabarito/simulado") 
+        } else{
+            res.send("RETORNO OK: "+dados) 
+        }    
+    }).catch(function(erro){
+        res.send("Erro encontrado: " + erro)
+    })
+
+    simuladoTable.create({
+        idUser: req.body.idUser,
+        modelo: req.body.modelo,
+        pergunta: req.body.pergunta,
+        selecionado: req.body.selecionado,
+        //acertou:
+    })
+
+})*/
+
 //arquivos em pdf:
 const fs = require('fs');
 api.get('/informacoes', function(request, response){
@@ -1192,6 +1322,10 @@ api.use("/", router);//permite utilizar a rota definida anteriormente
 api.use("/inscritos", listaInscritos);
 api.use("/detalhes", listaDetalhesInscrito);
 api.use("/completo", listaDadosCompletos);
+api.use("/cadastraSimulado", listaGabarito);
+api.use("/simulado", perguntaSimulado);
+api.use("/simuladoq1", perguntaSimuladoQ1);
+
 
 //api.use("/inscricao", cadastraInscrito);
 //api.use("/formulario", formInscricao);
