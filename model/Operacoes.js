@@ -9,9 +9,10 @@ var dadosCompletos = "SELECT * FROM candidatos INNER JOIN usuarios ON candidatos
 var dadosGabaritos = "SELECT count(*) AS qtdPerguntas FROM gabaritos where modelo = 1"
 //var checagemSimulado = "SELECT * FROM gabaritos g INNER JOIN simulados s on g.modelo = s.modelo and g.pergunta = s.pergunta WHERE s.idUser = ? ORDER BY g.pergunta DESC"
 //var checagemSimulado = "SELECT * FROM gabaritos g INNER JOIN simulados s on g.modelo = s.modelo and g.pergunta = s.pergunta + 1 WHERE s.idUser = ? ORDER BY g.pergunta DESC"
-var checagemSimulado = "SELECT g.modelo,g.materia,g.pergunta,g.enunciado,g.resp_a,g.resp_b,g.resp_c,g.resp_d,g.resp_e,g.img,s.idUser FROM gabaritos g LEFT JOIN simulados s on g.modelo = s.modelo and g.pergunta = s.pergunta + 1 WHERE s.idUser = 28 ORDER BY g.pergunta DESC"
+var checagemSimulado = "SELECT g.modelo,g.materia,g.pergunta,g.enunciado,g.resp_a,g.resp_b,g.resp_c,g.resp_d,g.resp_e,g.img,s.idUser FROM gabaritos g LEFT JOIN simulados s on g.modelo = s.modelo and g.pergunta = s.pergunta + 1 WHERE s.idUser = ? ORDER BY g.pergunta DESC"
 var simuladoQ1 = "SELECT g.modelo,g.materia,g.pergunta,g.enunciado,g.resp_a,g.resp_b,g.resp_c,g.resp_d,g.resp_e,g.img FROM gabaritos g WHERE modelo = ? ORDER BY pergunta"
-
+var registroTempo = "SELECT * FROM alunosimulados WHERE idUser = ?"
+var respAlunoSimples = "SELECT s.modelo, s.pergunta, s.acertou, g.materia FROM simulados s INNER JOIN gabaritos g on s.pergunta = g.pergunta and s.modelo = g.modelo WHERE idUser = ?"
 
 //exportando a classe
 module.exports = class Operacoes{
@@ -45,4 +46,12 @@ module.exports = class Operacoes{
     static getSimuladoQ1(id, callback){
         return db.query(simuladoQ1, [id], callback);//nesse caso id = nº modelo
     }
+    static getRegistroTempo(id, callback){
+        return db.query(registroTempo, [id], callback);
+    }
+    static getRespAlunoSimples(id, callback){
+        return db.query(respAlunoSimples, [id], callback);
+    }
+
+    
 }
