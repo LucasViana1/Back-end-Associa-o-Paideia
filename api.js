@@ -14,6 +14,8 @@ const listaDadosCompletos = require("./rotas/listaDadosCompletos");
 const listaGabarito = require("./rotas/listaGabarito")
 const perguntaSimulado = require("./rotas/perguntaSimulado")
 const perguntaSimuladoQ1 = require("./rotas/perguntaSimuladoQ1")
+const registrosTempo = require("./rotas/registrosTempo")
+const respostasAlunoSimples = require("./rotas/respAlunoSimples")
 
 //"use" trabalha as requisições conforme a demanda
 api.use(cors());//trata requisições que não é da mesma origem que a API
@@ -37,6 +39,7 @@ const arquivosTable = require("./models/ArquivosTable")
 const controleTable = require("./models/ControleTable")
 const gabaritoTable = require("./models/GabaritosTable")
 const simuladoTable = require("./models/SimuladoTable")
+const alunosimuladoTable = require("./models/AlunoSimuladoTable")
 
 const operacoes = require("./model/Operacoes")
 
@@ -1164,6 +1167,57 @@ api.get('/inscricao', function(req,res){
     //res.send('teste')
 })
 
+//define nº modelo de simulado ao aluno
+api.get('/modelo', function(req,res){
+
+    //TESTANDO Nº ALEATORIO PARA MODELO DE SIMULADO:
+    /*let um = 0
+    let dois = 0
+    let tres = 0
+    let quatro = 0*/
+    //for(let i = 0; i < 64; i++){
+    let numModeloSimulado = Math.floor(Math.random() * 4) + 1
+    /*switch(numModeloSimulado){
+        case 1: um++; break;
+        case 2: dois++; break;
+        case 3: tres++; break;
+        case 4: quatro++; break;
+        default: console.log("numero aleatorio invalido! "+numModeloSimulado)
+    }*/
+    console.log("nº modelo gerado: "+numModeloSimulado)
+    res.send(''+numModeloSimulado)
+    //}
+    /*console.log("qtd 1: "+um) 
+    console.log("qtd 2: "+dois) 
+    console.log("qtd 3: "+tres) 
+    console.log("qtd 4: "+quatro) */
+
+    /*controleTable.findAll({
+        where: {
+            id: 2
+        }
+    }).then(function(dados){
+        
+        let retornoString = JSON.parse(JSON.stringify(dados))
+        let numModelo = parseInt(retornoString[0].fim)
+        //numModelo = numModelo + 1
+        console.log("dados modelo: "+numModelo)
+        if(numModelo == 4) numModelo = 0//retorna ao inicio da contagem
+        //anda para o proximo modelo de simulado
+        controleTable.update({
+            fim: numModelo + 1
+        },{
+            where: {
+                id: 2
+            }
+        });
+        
+        res.send(dados) 
+        
+    }).catch(function(erro){res.send("Erro encontrado: " + erro)})
+    //res.send('teste')*/
+})
+
 api.post('/cadastraSimulado', function(req,res){
     //variaveis recebem requisição para facilitar organização/entendimento
     let alternativaCerta = req.body.correta
@@ -1253,10 +1307,64 @@ api.post('/simulado', function(req,res){
                 selecionado: req.body.selecionado,
                 acertou: correto
             })   
-            res.send(correto)
+            //res.send(correto)
+
+            //RETORNAR DATETIME QUE FOI INSERIDO A QUESTÃO ANTERIOR
+            //CONTINUAR APARTIR DAQ
+            /*simuladoTable.findAll({
+                where: {
+                    idUser: req.body.idUser,
+                   // modelo: req.body.modelo,//talvez redundante
+                    pergunta: req.body.pergunta,
+                    //ALTERAR PARAMETROS ACIMA
+                }
+            }).then(function(ret){ 
+                var retStr = JSON.parse(JSON.stringify(ret))
+                console.log('ret str: '+retStr[0].createdAt)//ALTERAR AQUI
+
+                //res.send()//envia ao cliente
+
+            }).catch(function(erro){
+                res.send("Erro encontrado: " + erro)
+            })*/
+            
         }    
     }).catch(function(erro){
         res.send("Erro encontrado: " + erro)
+    })
+
+})
+
+api.post('/alunosimulado', function(req,res){
+
+    alunosimuladoTable.findAll({
+        where: {
+            idUser: req.body.idUser,
+        }
+    }).then(function(dados){ 
+        if(dados == ''){
+            alunosimuladoTable.create({
+                idUser: req.body.idUser,
+                horaInicio: req.body.horaInicio,
+                horaFimMax: req.body.horaFimMax
+            }).then(function(resp){
+                console.log("resp alunosimulado: "+resp)
+            }).catch(function(erro){
+                res.send("Erro: " + erro)
+            })
+        } else{
+            //ja possui registro na tabela para esse ID de usuario: UPDATE
+            alunosimuladoTable.update({
+                idUser: req.body.idUser,
+                horaInicio: req.body.horaInicio,
+                horaFimMax: req.body.horaFimMax
+            },{
+                where: {
+                    idUser: req.body.idUser,
+                }
+            });
+
+        }
     })
 
 })
@@ -1325,6 +1433,12 @@ api.use("/completo", listaDadosCompletos);
 api.use("/cadastraSimulado", listaGabarito);
 api.use("/simulado", perguntaSimulado);
 api.use("/simuladoq1", perguntaSimuladoQ1);
+api.use("/alunosimulado", registrosTempo);
+api.use("/gabaritosimples", respostasAlunoSimples);
+
+/*if('2019-09-06 11:15:24' <= '2019-09-06 13:15:24'){
+    console.log("okk")
+}*/
 
 
 //api.use("/inscricao", cadastraInscrito);
