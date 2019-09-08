@@ -13,6 +13,7 @@ var checagemSimulado = "SELECT g.modelo,g.materia,g.pergunta,g.enunciado,g.resp_
 var simuladoQ1 = "SELECT g.modelo,g.materia,g.pergunta,g.enunciado,g.resp_a,g.resp_b,g.resp_c,g.resp_d,g.resp_e,g.img FROM gabaritos g WHERE modelo = ? ORDER BY pergunta"
 var registroTempo = "SELECT * FROM alunosimulados WHERE idUser = ?"
 var respAlunoSimples = "SELECT s.modelo, s.pergunta, s.acertou, g.materia FROM simulados s INNER JOIN gabaritos g on s.pergunta = g.pergunta and s.modelo = g.modelo WHERE idUser = ?"
+var respAlunoCompleto = "SELECT s.modelo, s.pergunta, s.acertou, s.selecionado, g.materia, g.enunciado, g.resp_a, g.resp_b, g.resp_c, g.resp_d, g.resp_e, g.correta, u.nome, s.createdAt FROM simulados s INNER JOIN gabaritos g on s.pergunta = g.pergunta and s.modelo = g.modelo INNER JOIN usuarios u on u.id = s.idUser WHERE idUser = ?"
 
 //exportando a classe
 module.exports = class Operacoes{
@@ -51,6 +52,9 @@ module.exports = class Operacoes{
     }
     static getRespAlunoSimples(id, callback){
         return db.query(respAlunoSimples, [id], callback);
+    }
+    static getRespAlunoCompleto(id, callback){
+        return db.query(respAlunoCompleto, [id], callback);
     }
 
     
