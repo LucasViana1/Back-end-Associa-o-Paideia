@@ -16,6 +16,7 @@ const perguntaSimulado = require("./rotas/perguntaSimulado")
 const perguntaSimuladoQ1 = require("./rotas/perguntaSimuladoQ1")
 const registrosTempo = require("./rotas/registrosTempo")
 const respostasAlunoSimples = require("./rotas/respAlunoSimples")
+const respostasAlunoCompleto = require("./rotas/respAlunoCompleto")
 
 //"use" trabalha as requisições conforme a demanda
 api.use(cors());//trata requisições que não é da mesma origem que a API
@@ -1435,6 +1436,7 @@ api.use("/simulado", perguntaSimulado);
 api.use("/simuladoq1", perguntaSimuladoQ1);
 api.use("/alunosimulado", registrosTempo);
 api.use("/gabaritosimples", respostasAlunoSimples);
+api.use("/gabaritocompleto", respostasAlunoCompleto);
 
 /*if('2019-09-06 11:15:24' <= '2019-09-06 13:15:24'){
     console.log("okk")
