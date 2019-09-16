@@ -1370,6 +1370,19 @@ api.post('/alunosimulado', function(req,res){
 
 })
 
+api.get('/gabaritos', function(req,res){
+
+    gabaritoTable.findAll({
+        
+    }).then(function(dados){
+        
+        res.send(dados) 
+        //console.log("gabaritos: "+dados)
+        
+    }).catch(function(erro){res.send("Erro encontrado: " + erro)})
+    //res.send('teste')
+})
+
 /*api.post('/gabarito', function(req,res){
     //verificar se aluno acertou questao
     gabaritoTable.findAll({
