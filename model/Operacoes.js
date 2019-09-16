@@ -12,8 +12,8 @@ var dadosGabaritos = "SELECT count(*) AS qtdPerguntas FROM gabaritos where model
 var checagemSimulado = "SELECT g.modelo,g.materia,g.pergunta,g.enunciado,g.resp_a,g.resp_b,g.resp_c,g.resp_d,g.resp_e,g.img,s.idUser FROM gabaritos g LEFT JOIN simulados s on g.modelo = s.modelo and g.pergunta = s.pergunta + 1 WHERE s.idUser = ? ORDER BY g.pergunta DESC"
 var simuladoQ1 = "SELECT g.modelo,g.materia,g.pergunta,g.enunciado,g.resp_a,g.resp_b,g.resp_c,g.resp_d,g.resp_e,g.img FROM gabaritos g WHERE modelo = ? ORDER BY pergunta"
 var registroTempo = "SELECT * FROM alunosimulados WHERE idUser = ?"
-var respAlunoSimples = "SELECT s.modelo, s.pergunta, s.acertou, g.materia FROM simulados s INNER JOIN gabaritos g on s.pergunta = g.pergunta and s.modelo = g.modelo WHERE idUser = ?"
-var respAlunoCompleto = "SELECT s.modelo, s.pergunta, s.acertou, s.selecionado, g.materia, g.enunciado, g.resp_a, g.resp_b, g.resp_c, g.resp_d, g.resp_e, g.correta, u.nome, s.createdAt FROM simulados s INNER JOIN gabaritos g on s.pergunta = g.pergunta and s.modelo = g.modelo INNER JOIN usuarios u on u.id = s.idUser WHERE idUser = ?"
+var respAlunoSimples = "SELECT s.modelo, s.pergunta, s.acertou, g.materia, s.selecionado FROM simulados s INNER JOIN gabaritos g on s.pergunta = g.pergunta and s.modelo = g.modelo WHERE idUser = ?"
+var respAlunoCompleto = "SELECT s.modelo, s.pergunta, s.acertou, s.selecionado, g.materia, g.enunciado, g.resp_a, g.resp_b, g.resp_c, g.resp_d, g.resp_e, g.correta, g.img, u.nome, s.createdAt FROM simulados s INNER JOIN gabaritos g on s.pergunta = g.pergunta and s.modelo = g.modelo INNER JOIN usuarios u on u.id = s.idUser WHERE idUser = ?"
 
 //exportando a classe
 module.exports = class Operacoes{
