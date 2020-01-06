@@ -1,12 +1,9 @@
 //serviço de email temporario, posteriormente implementar em outro arquivo
 const nodemailer = require('nodemailer');
-//const config = require('../dev/config')
-//credenciais email AJUSTAR PARA DEV
-//const remetente = process.env.EMAILUSER || config.emailUser()
-//const senhaRemetente = process.env.EMAILPASSWORD || config.emailSenha()
+// const config = require('../dev/config')
 const remetente = process.env.EMAILUSER
 const senhaRemetente = process.env.EMAILPASSWORD
-const respAuto = "<p>Favor não responder esse E-mail, se quiser entrar em contato conosco utilize o E-mail <em>contato@associacaopaideia.org.br</em></p>";
+const respAuto = "<p>Favor não responder esse e-mail, se quiser entrar em contato conosco utilize o e-mail <em>contato@associacaopaideia.org.br</em></p>";
 //serviço de transporte de email
 var transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',//smtp-relay.gmail.com
@@ -38,7 +35,7 @@ exports.cadastroMail = function(destinatario,senha,nome,codigo){
             '<p><b>Senha: </b>'+senha+'</p>'+
             '<p><b>Código (para válidar o primeiro acesso): </b>'+codigo+'</p>'+
         '<br>'+
-        '<h3>Acesse através do link: <a href="https://www.associacaopaideia.org.br/#/login">https://www.associacaopaideia.org.br/#/login</a></h3>'+
+        '<h3>Acesse através do link: <a href="https://www.associacaopaideia.org.br/acesso">https://www.associacaopaideia.org.br/acesso</a></h3>'+
         '<br>'+
         respAuto
     };
@@ -58,7 +55,7 @@ exports.listaEsperaMail = function(destinatario,nome,matricula){
         subject: 'CONFIRMAÇÃO DE INSCRIÇÃO', // assunto
         html: 
         '<h2>Olá '+nome+'!</h2><br>'+
-        '<p>Sua inscrição para o segundo semestre de 2019 foi efetuada com sucesso e sua inscrição consta na lista de espera '+
+        '<p>Sua inscrição para o primeiro semestre de 2020 foi efetuada com sucesso e sua inscrição consta na lista de espera '+
         '(lembramos que você precisa participar de todas as etapas igualmente).</p>'+
         '<p>Seu número de matrícula é: '+matricula+'. </p><br>'+
         'Em anexo o termo de responsabilidade, que deverá ser entregue impresso no dia da reunião de confirmação'+
@@ -86,7 +83,7 @@ exports.listaRegularMail = function(destinatario,nome,matricula){
         subject: 'CONFIRMAÇÃO DE INSCRIÇÃO', // assunto
         html: 
         '<h2>Olá '+nome+'!</h2><br>'+
-        '<p>Sua inscrição para o segundo semestre de 2019 foi efetuada com sucesso e sua inscrição consta na lista regular.</p>'+
+        '<p>Sua inscrição para o primeiro semestre de 2020 foi efetuada com sucesso e sua inscrição consta na lista regular.</p>'+
         '<p>Seu número de matrícula é: '+matricula+' </p><br>'+
         'Em anexo o termo de responsabilidade, que deverá ser entregue impresso no dia da reunião de confirmação.'+
         '<br>'+
@@ -121,7 +118,7 @@ exports.cancelaInscricao = function(destinatario){
         '<li>Cópia do RG, CPF e uma fotografia recente 3x4 do (a) candidato (a) – pode utilizar uma “selfie” com boa qualidade e luz;</li>'+
         '<li>Cópia do RG e CPF dos responsáveis legais (menores de 18 anos);</li>'+
         '<li>Cópia do Termo de Responsabilidade em duas vias, assinado pelo (a) candidato (a) ou pelos responsáveis legais, quando menor de 18 anos de idade (necessário apenas à impressão e entrega na data da entrevista);</li>'+
-        '<li>Cópia do Comprovante de endereço (conta de luz, água, telefone, aluguel, IPTU e IPVA), desde que seja atualizado (último mês vigente ou do ano vigente de 2019);</li>'+
+        '<li>Cópia do Comprovante de endereço (conta de luz, água, telefone, aluguel, IPTU e IPVA), desde que seja atualizado (último mês vigente ou do ano vigente de 2020);</li>'+
         '<li>Cópia do Cartão Cidadão (folha individual);</li>'+
         '<li>Comprovante de matrícula do Ensino Médio, se o candidato estiver cursando ou Certificado de Conclusão, se já concluiu;</li>'+
         '<li>Histórico escolar do Ensino Médio;</li>'+

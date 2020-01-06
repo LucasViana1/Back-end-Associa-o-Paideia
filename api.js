@@ -171,7 +171,8 @@ api.post('/insereDadosPessoais', function(req,res){
                 tel2: req.body.tel2,
                 cpf: req.body.cpf,
                 rg: req.body.rg,
-                cidadao: req.body.cidadao
+                cidadao: req.body.cidadao,
+                curso_desejado: req.body.curso_desejado
             }).then(function(){}).catch(function(erro){res.send("Erro: " + erro)})         
         } else{
             //ja possui registro na tabela para esse ID de usuario: UPDATE
@@ -197,7 +198,7 @@ api.post('/insereDadosPessoais', function(req,res){
 
     
 })
-//CADASTRA DADOS SOCIOECONOMICOS DO CANDIDATO
+//CADASTRA DADOS SOCIOECONOMICOS DO CANDIDATO (ATUALIZADO!!!)
 api.post('/insereDadosSocioeconomicos', function(req,res){
 
     socioeconomicoTable.findAll({
@@ -209,89 +210,39 @@ api.post('/insereDadosSocioeconomicos', function(req,res){
             //insere socioeconomico no banco
             socioeconomicoTable.create({
                 idUser: req.body.idUser,
-                qtd_pessoas: req.body.qtd_pessoas,
-                qtd_filhos: req.body.qtd_filhos,
-                casa: req.body.casa,
-                local_casa: req.body.local_casa,
-                transporte: req.body.transporte,
-                escol_pai: req.body.escol_pai,                                
-                escol_mae: req.body.escol_mae,
-                trab_pai: req.body.trab_pai,                
-                trab_mae: req.body.trab_mae,
+                sexo: req.body.sexo,
+                idade: req.body.idade,
+                mora_tempo: req.body.mora_tempo,
+                local: req.body.local,
+                mora_pessoas_qtd: req.body.mora_pessoas_qtd,
+                mora_tipo: req.body.mora_tipo,
                 trab_candidato: req.body.trab_candidato,
-                pessoas_renda: req.body.pessoas_renda,
-                renda_total: req.body.renda_total,
-                
-                tv: req.body.tv,
-                dvd: req.body.dvd,
-                radio: req.body.radio,
-                pc: req.body.pc,
-                automovel: req.body.automovel, 
-                lava_roupa: req.body.lava_roupa,
-                geladeira: req.body.geladeira,
-                tel_fixo: req.body.tel_fixo,
-                celular: req.body.celular,
-                acesso_internet: req.body.acesso_internet,                                  
-                tv_ass: req.body.tv_ass,
-                lava_louca: req.body.lava_louca,
-
-                trab_atual: req.body.trab_atual,
-                trab_despesas: req.body.trab_despesas,                                
-                trab_sustento: req.body.trab_sustento,
-                trab_independente: req.body.trab_independente,                
-                trab_experi: req.body.trab_experi,
-                trab_p_estudos: req.body.trab_p_estudos,
-
-                trab_horas: req.body.trab_horas,
-                estuda_e_trab: req.body.estuda_e_trab,
+                trab_pais: req.body.trab_pais,
+                fundamental: req.body.fundamental,
+                medio: req.body.medio,
+                ler: req.body.ler,
+                ler_qtd: req.body.ler_qtd,
+                informado: req.body.informado,
+                internet: req.body.internet,
+                fez_vestibular: req.body.fez_vestibular,
+                trab_estudo: req.body.trab_estudo,
                 motivo_estudar: req.body.motivo_estudar,
-                eja: req.body.eja,
-                eja_tipo: req.body.eja_tipo,
-                tem_internet: req.body.tem_internet,                                
-                //tem_computador: req.body.tem_computador,
-                acesso_internet: req.body.acesso_internet, 
-
-                curso_lingua: req.body.curso_lingua,
-                curso_info: req.body.curso_info,
-                curso_prepara: req.body.curso_prepara,
-                curso_tecnico: req.body.curso_tecnico,
-                curso_outro: req.body.curso_outro,
-
-                jornal: req.body.jornal,
-                sites: req.body.sites,
-                manuais: req.body.manuais,                                
-                ficcao: req.body.ficcao,
-                saude: req.body.saude,                
-                religiao: req.body.religiao,
-                humor: req.body.humor,
-                info_geral: req.body.info_geral,
-                nao_ficcao: req.body.nao_ficcao,
-                estilo: req.body.estilo,
-                educa: req.body.educa,
-                adolecente: req.body.adolecente,
-                lazer: req.body.lazer,                                
-                cientifica: req.body.cientifica,
-
-                aval_grupo: req.body.aval_grupo,                
-                aval_esporte: req.body.aval_esporte,
-                aval_biblioteca: req.body.aval_biblioteca,
-                aval_local: req.body.aval_local,
-                aval_respeito: req.body.aval_respeito,
-                aval_laboratorio: req.body.aval_laboratorio,
-                aval_sala: req.body.aval_sala,
-                aval_lingua: req.body.aval_lingua,
-                aval_interesse: req.body.aval_interesse,                                
-                aval_ambiental: req.body.aval_ambiental,
-                aval_horario: req.body.aval_horario,                
-                aval_segurancao: req.body.aval_segurancao,
-                aval_informatica: req.body.aval_informatica,
-                aval_atencao: req.body.aval_atencao,
-                
-                aval_conhecimento_prof: req.body.aval_conhecimento_prof,
-                aval_dedica_prof: req.body.aval_dedica_prof,
-                aval_passeios: req.body.aval_passeios,
-                aval_acessibilidade: req.body.aval_acessibilidade,
-                    
+                transporte: req.body.transporte,
+                // checkbox
+                televisao_atividade: req.body.televisao_atividade,
+                musica_atividade: req.body.musica_atividade,
+                cinema_atividade: req.body.cinema_atividade,
+                leitura_atividade: req.body.leitura_atividade,
+                internet_atividade: req.body.internet_atividade,
+                esporte_atividade: req.body.esporte_atividade,
+                nenhuma_atividade: req.body.nenhuma_atividade,
+                // checkbox
+                mora_pessoas_perentesco_sozinho: req.body.mora_pessoas_perentesco_sozinho,
+                mora_pessoas_perentesco_pai: req.body.mora_pessoas_perentesco_pai,
+                mora_pessoas_perentesco_mae: req.body.mora_pessoas_perentesco_mae,
+                mora_pessoas_perentesco_esposo: req.body.mora_pessoas_perentesco_esposo,
+                mora_pessoas_perentesco_avo: req.body.mora_pessoas_perentesco_avo,
+                mora_pessoas_perentesco_amigo: req.body.mora_pessoas_perentesco_amigo,    
 
             }).then(function(){
                 //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
@@ -304,89 +255,39 @@ api.post('/insereDadosSocioeconomicos', function(req,res){
             //ja possui registro na tabela para esse ID de usuario: UPDATE
             socioeconomicoTable.update({
                 idUser: req.body.idUser,
-                qtd_pessoas: req.body.qtd_pessoas,
-                qtd_filhos: req.body.qtd_filhos,
-                casa: req.body.casa,
-                local_casa: req.body.local_casa,
-                transporte: req.body.transporte,
-                escol_pai: req.body.escol_pai,                                
-                escol_mae: req.body.escol_mae,
-                trab_pai: req.body.trab_pai,                
-                trab_mae: req.body.trab_mae,
+                sexo: req.body.sexo,
+                idade: req.body.idade,
+                mora_tempo: req.body.mora_tempo,
+                local: req.body.local,
+                mora_pessoas_qtd: req.body.mora_pessoas_qtd,
+                mora_tipo: req.body.mora_tipo,
                 trab_candidato: req.body.trab_candidato,
-                pessoas_renda: req.body.pessoas_renda,
-                renda_total: req.body.renda_total,
-                
-                tv: req.body.tv,
-                dvd: req.body.dvd,
-                radio: req.body.radio,
-                pc: req.body.pc,
-                automovel: req.body.automovel, 
-                lava_roupa: req.body.lava_roupa,
-                geladeira: req.body.geladeira,
-                tel_fixo: req.body.tel_fixo,
-                celular: req.body.celular,
-                acesso_internet: req.body.acesso_internet,                                  
-                tv_ass: req.body.tv_ass,
-                lava_louca: req.body.lava_louca,
-
-                trab_atual: req.body.trab_atual,
-                trab_despesas: req.body.trab_despesas,                                
-                trab_sustento: req.body.trab_sustento,
-                trab_independente: req.body.trab_independente,                
-                trab_experi: req.body.trab_experi,
-                trab_p_estudos: req.body.trab_p_estudos,
-
-                trab_horas: req.body.trab_horas,
-                estuda_e_trab: req.body.estuda_e_trab,
+                trab_pais: req.body.trab_pais,
+                fundamental: req.body.fundamental,
+                medio: req.body.medio,
+                ler: req.body.ler,
+                ler_qtd: req.body.ler_qtd,
+                informado: req.body.informado,
+                internet: req.body.internet,
+                fez_vestibular: req.body.fez_vestibular,
+                trab_estudo: req.body.trab_estudo,
                 motivo_estudar: req.body.motivo_estudar,
-                eja: req.body.eja,
-                eja_tipo: req.body.eja_tipo,
-                tem_internet: req.body.tem_internet,                                
-                //tem_computador: req.body.tem_computador,
-                acesso_internet: req.body.acesso_internet, 
-
-                curso_lingua: req.body.curso_lingua,
-                curso_info: req.body.curso_info,
-                curso_prepara: req.body.curso_prepara,
-                curso_tecnico: req.body.curso_tecnico,
-                curso_outro: req.body.curso_outro,
-
-                jornal: req.body.jornal,
-                sites: req.body.sites,
-                manuais: req.body.manuais,                                
-                ficcao: req.body.ficcao,
-                saude: req.body.saude,                
-                religiao: req.body.religiao,
-                humor: req.body.humor,
-                info_geral: req.body.info_geral,
-                nao_ficcao: req.body.nao_ficcao,
-                estilo: req.body.estilo,
-                educa: req.body.educa,
-                adolecente: req.body.adolecente,
-                lazer: req.body.lazer,                                
-                cientifica: req.body.cientifica,
-
-                aval_grupo: req.body.aval_grupo,                
-                aval_esporte: req.body.aval_esporte,
-                aval_biblioteca: req.body.aval_biblioteca,
-                aval_local: req.body.aval_local,
-                aval_respeito: req.body.aval_respeito,
-                aval_laboratorio: req.body.aval_laboratorio,
-                aval_sala: req.body.aval_sala,
-                aval_lingua: req.body.aval_lingua,
-                aval_interesse: req.body.aval_interesse,                                
-                aval_ambiental: req.body.aval_ambiental,
-                aval_horario: req.body.aval_horario,                
-                aval_segurancao: req.body.aval_segurancao,
-                aval_informatica: req.body.aval_informatica,
-                aval_atencao: req.body.aval_atencao,
-                
-                aval_conhecimento_prof: req.body.aval_conhecimento_prof,
-                aval_dedica_prof: req.body.aval_dedica_prof,
-                aval_passeios: req.body.aval_passeios,
-                aval_acessibilidade: req.body.aval_acessibilidade,
-                
+                transporte: req.body.transporte,
+                // checkbox
+                televisao_atividade: req.body.televisao_atividade,
+                musica_atividade: req.body.musica_atividade,
+                cinema_atividade: req.body.cinema_atividade,
+                leitura_atividade: req.body.leitura_atividade,
+                internet_atividade: req.body.internet_atividade,
+                esporte_atividade: req.body.esporte_atividade,
+                nenhuma_atividade: req.body.nenhuma_atividade,
+                // checkbox
+                mora_pessoas_perentesco_sozinho: req.body.mora_pessoas_perentesco_sozinho,
+                mora_pessoas_perentesco_pai: req.body.mora_pessoas_perentesco_pai,
+                mora_pessoas_perentesco_mae: req.body.mora_pessoas_perentesco_mae,
+                mora_pessoas_perentesco_esposo: req.body.mora_pessoas_perentesco_esposo,
+                mora_pessoas_perentesco_avo: req.body.mora_pessoas_perentesco_avo,
+                mora_pessoas_perentesco_amigo: req.body.mora_pessoas_perentesco_amigo,   
             },{
                 where: {
                     idUser: req.body.idUser,
@@ -395,8 +296,295 @@ api.post('/insereDadosSocioeconomicos', function(req,res){
         }
     })
 
+    //busca tabela de usuarios atraves do id, ULTIMO FORMULARIO DE PREENCHIMENTO (ATUALIZAR IMPLEMENTAÇÃO ABAIXO)
+    insereUsuario.findAll({
+        where: {
+            id: req.body.idUser,
+        }
+    }).then(function(dados){ 
+        if(dados == ''){
+            res.send("Nenhum registro encontrado!") 
+        } else{
+            //TESTE DE RETORNO DE NUMERO DE INSCRITOS
+            var qtd = 0
+            operacoes.getQtdInscritos(function(error, retorno){
+                //console.log("retorno: "+retorno[0].id)  
+                retorno.forEach(element => {
+                    console.log("retorno: "+element.cancelado)
+                    if(element.cancelado == null){
+                        qtd++
+                    }
+
+                });  
+                console.log('total: '+qtd) 
+
+                var retornoString = JSON.parse(JSON.stringify(dados))
+                console.log('dados encontrados: '+retornoString[0].email)
+                console.log("Retorno String: "+retornoString[0].id)
+                console.log("qtd inscritos: "+qtd)
+                let matricula = parseInt(retornoString[0].id)
+                matricula = matricula + 1935
+                //79 ou 2
+                if(qtd <= 79){
+                    //lista regular: email lista regular, "inscrito_atual" = 1, "espera" = 0
+                    insereUsuario.update({
+                        inscrito_atual: 1,
+                        espera: 0,
+                        matricula: matricula
+                    },{
+                        where: {
+                            id: req.body.idUser
+                        }
+                    });
+                    
+                    //envia email, inscritos 2018/2019: 238, inscritos antes 2018: 1697, total inscritos anteriores a 2 sem 2019: 
+                    mail.listaRegularMail(retornoString[0].email, retornoString[0].nome, matricula)
+                    //console.log("Numero de matricula: "+matricula)
+                }
+                //3 (80) regular, 2 (40) espera, 5 (120) total (TESTE EM HOMOLOGAÇÃO)
+                //79 (2), 119 (4)
+                else if(qtd > 79 && qtd <= 119){
+                    //lista de espera: email lista espera, "inscrito_atual" = 1, "espera" = 1
+                    insereUsuario.update({
+                        inscrito_atual: 1,
+                        espera: 1,
+                        matricula: matricula
+                    },{
+                        where: {
+                        id: req.body.idUser
+                        }
+                    });
+                    //envia email
+                    mail.listaEsperaMail(retornoString[0].email, retornoString[0].nome, matricula)
+                    
+                    //se for o 120º candidato, tabela "controle" é marcada e as inscrições são travadas
+                    //119 (4)
+                    if(qtd == 119){
+                        controleTable.update({
+                            fim: 1
+                        },{
+                            where: {
+                                id: 1
+                            }
+                        });
+                    }
+                }
+                else{
+                    //impede que exceda 120 inscritos
+                    mail.listaCheiaMail(retornoString[0].email, retornoString[0].nome)
+                }
+                
+            })
+
+            
+            // DEPOIS REMOVER O COMENTARIO ABAIXO:
+        // mail.finalizaInscricaoMail(retornoString[0].email, retornoString[0].nome)
+        }//fim else    
+    }).catch(function(erro){
+        res.send("Erro encontrado: " + erro)
+    })
     
 })
+//CADASTRA DADOS SOCIOECONOMICOS DO CANDIDATO (ANTIGO 2019)
+// api.post('/insereDadosSocioeconomicos', function(req,res){
+
+//     socioeconomicoTable.findAll({
+//         where: {
+//             idUser: req.body.idUser,
+//         }
+//     }).then(function(dados){ 
+//         if(dados == ''){
+//             //insere socioeconomico no banco
+//             socioeconomicoTable.create({
+//                 idUser: req.body.idUser,
+//                 qtd_pessoas: req.body.qtd_pessoas,
+//                 qtd_filhos: req.body.qtd_filhos,
+//                 casa: req.body.casa,
+//                 local_casa: req.body.local_casa,
+//                 transporte: req.body.transporte,
+//                 escol_pai: req.body.escol_pai,                                
+//                 escol_mae: req.body.escol_mae,
+//                 trab_pai: req.body.trab_pai,                
+//                 trab_mae: req.body.trab_mae,
+//                 trab_candidato: req.body.trab_candidato,
+//                 pessoas_renda: req.body.pessoas_renda,
+//                 renda_total: req.body.renda_total,
+                
+//                 tv: req.body.tv,
+//                 dvd: req.body.dvd,
+//                 radio: req.body.radio,
+//                 pc: req.body.pc,
+//                 automovel: req.body.automovel, 
+//                 lava_roupa: req.body.lava_roupa,
+//                 geladeira: req.body.geladeira,
+//                 tel_fixo: req.body.tel_fixo,
+//                 celular: req.body.celular,
+//                 acesso_internet: req.body.acesso_internet,                                  
+//                 tv_ass: req.body.tv_ass,
+//                 lava_louca: req.body.lava_louca,
+
+//                 trab_atual: req.body.trab_atual,
+//                 trab_despesas: req.body.trab_despesas,                                
+//                 trab_sustento: req.body.trab_sustento,
+//                 trab_independente: req.body.trab_independente,                
+//                 trab_experi: req.body.trab_experi,
+//                 trab_p_estudos: req.body.trab_p_estudos,
+
+//                 trab_horas: req.body.trab_horas,
+//                 estuda_e_trab: req.body.estuda_e_trab,
+//                 motivo_estudar: req.body.motivo_estudar,
+//                 eja: req.body.eja,
+//                 eja_tipo: req.body.eja_tipo,
+//                 tem_internet: req.body.tem_internet,                                
+//                 //tem_computador: req.body.tem_computador,
+//                 acesso_internet: req.body.acesso_internet, 
+
+//                 curso_lingua: req.body.curso_lingua,
+//                 curso_info: req.body.curso_info,
+//                 curso_prepara: req.body.curso_prepara,
+//                 curso_tecnico: req.body.curso_tecnico,
+//                 curso_outro: req.body.curso_outro,
+
+//                 jornal: req.body.jornal,
+//                 sites: req.body.sites,
+//                 manuais: req.body.manuais,                                
+//                 ficcao: req.body.ficcao,
+//                 saude: req.body.saude,                
+//                 religiao: req.body.religiao,
+//                 humor: req.body.humor,
+//                 info_geral: req.body.info_geral,
+//                 nao_ficcao: req.body.nao_ficcao,
+//                 estilo: req.body.estilo,
+//                 educa: req.body.educa,
+//                 adolecente: req.body.adolecente,
+//                 lazer: req.body.lazer,                                
+//                 cientifica: req.body.cientifica,
+
+//                 aval_grupo: req.body.aval_grupo,                
+//                 aval_esporte: req.body.aval_esporte,
+//                 aval_biblioteca: req.body.aval_biblioteca,
+//                 aval_local: req.body.aval_local,
+//                 aval_respeito: req.body.aval_respeito,
+//                 aval_laboratorio: req.body.aval_laboratorio,
+//                 aval_sala: req.body.aval_sala,
+//                 aval_lingua: req.body.aval_lingua,
+//                 aval_interesse: req.body.aval_interesse,                                
+//                 aval_ambiental: req.body.aval_ambiental,
+//                 aval_horario: req.body.aval_horario,                
+//                 aval_segurancao: req.body.aval_segurancao,
+//                 aval_informatica: req.body.aval_informatica,
+//                 aval_atencao: req.body.aval_atencao,
+                
+//                 aval_conhecimento_prof: req.body.aval_conhecimento_prof,
+//                 aval_dedica_prof: req.body.aval_dedica_prof,
+//                 aval_passeios: req.body.aval_passeios,
+//                 aval_acessibilidade: req.body.aval_acessibilidade,
+                    
+
+//             }).then(function(){
+//                 //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
+//                 //res.send("Pagamento cadastro com sucesso!")
+//             }).catch(function(erro){
+//                 res.send("Erro: " + erro)
+//             })
+           
+//         } else{
+//             //ja possui registro na tabela para esse ID de usuario: UPDATE
+//             socioeconomicoTable.update({
+//                 idUser: req.body.idUser,
+//                 qtd_pessoas: req.body.qtd_pessoas,
+//                 qtd_filhos: req.body.qtd_filhos,
+//                 casa: req.body.casa,
+//                 local_casa: req.body.local_casa,
+//                 transporte: req.body.transporte,
+//                 escol_pai: req.body.escol_pai,                                
+//                 escol_mae: req.body.escol_mae,
+//                 trab_pai: req.body.trab_pai,                
+//                 trab_mae: req.body.trab_mae,
+//                 trab_candidato: req.body.trab_candidato,
+//                 pessoas_renda: req.body.pessoas_renda,
+//                 renda_total: req.body.renda_total,
+                
+//                 tv: req.body.tv,
+//                 dvd: req.body.dvd,
+//                 radio: req.body.radio,
+//                 pc: req.body.pc,
+//                 automovel: req.body.automovel, 
+//                 lava_roupa: req.body.lava_roupa,
+//                 geladeira: req.body.geladeira,
+//                 tel_fixo: req.body.tel_fixo,
+//                 celular: req.body.celular,
+//                 acesso_internet: req.body.acesso_internet,                                  
+//                 tv_ass: req.body.tv_ass,
+//                 lava_louca: req.body.lava_louca,
+
+//                 trab_atual: req.body.trab_atual,
+//                 trab_despesas: req.body.trab_despesas,                                
+//                 trab_sustento: req.body.trab_sustento,
+//                 trab_independente: req.body.trab_independente,                
+//                 trab_experi: req.body.trab_experi,
+//                 trab_p_estudos: req.body.trab_p_estudos,
+
+//                 trab_horas: req.body.trab_horas,
+//                 estuda_e_trab: req.body.estuda_e_trab,
+//                 motivo_estudar: req.body.motivo_estudar,
+//                 eja: req.body.eja,
+//                 eja_tipo: req.body.eja_tipo,
+//                 tem_internet: req.body.tem_internet,                                
+//                 //tem_computador: req.body.tem_computador,
+//                 acesso_internet: req.body.acesso_internet, 
+
+//                 curso_lingua: req.body.curso_lingua,
+//                 curso_info: req.body.curso_info,
+//                 curso_prepara: req.body.curso_prepara,
+//                 curso_tecnico: req.body.curso_tecnico,
+//                 curso_outro: req.body.curso_outro,
+
+//                 jornal: req.body.jornal,
+//                 sites: req.body.sites,
+//                 manuais: req.body.manuais,                                
+//                 ficcao: req.body.ficcao,
+//                 saude: req.body.saude,                
+//                 religiao: req.body.religiao,
+//                 humor: req.body.humor,
+//                 info_geral: req.body.info_geral,
+//                 nao_ficcao: req.body.nao_ficcao,
+//                 estilo: req.body.estilo,
+//                 educa: req.body.educa,
+//                 adolecente: req.body.adolecente,
+//                 lazer: req.body.lazer,                                
+//                 cientifica: req.body.cientifica,
+
+//                 aval_grupo: req.body.aval_grupo,                
+//                 aval_esporte: req.body.aval_esporte,
+//                 aval_biblioteca: req.body.aval_biblioteca,
+//                 aval_local: req.body.aval_local,
+//                 aval_respeito: req.body.aval_respeito,
+//                 aval_laboratorio: req.body.aval_laboratorio,
+//                 aval_sala: req.body.aval_sala,
+//                 aval_lingua: req.body.aval_lingua,
+//                 aval_interesse: req.body.aval_interesse,                                
+//                 aval_ambiental: req.body.aval_ambiental,
+//                 aval_horario: req.body.aval_horario,                
+//                 aval_segurancao: req.body.aval_segurancao,
+//                 aval_informatica: req.body.aval_informatica,
+//                 aval_atencao: req.body.aval_atencao,
+                
+//                 aval_conhecimento_prof: req.body.aval_conhecimento_prof,
+//                 aval_dedica_prof: req.body.aval_dedica_prof,
+//                 aval_passeios: req.body.aval_passeios,
+//                 aval_acessibilidade: req.body.aval_acessibilidade,
+                
+//             },{
+//                 where: {
+//                     idUser: req.body.idUser,
+//                 }
+//             });
+//         }
+//     })
+
+    
+// })
 //CADASTRA DADOS ESTUDOS E FORMAÇÃO
 api.post('/insereDadosEstudos', function(req,res){
 

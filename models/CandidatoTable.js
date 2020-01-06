@@ -30,6 +30,9 @@ const Candidato = db.sequelize.define('candidatos', {
     },
     cidadao: {
         type: db.Sequelize.STRING
+    },
+    curso_desejado: {
+        type: db.Sequelize.STRING
     }
     
 })
