@@ -6,11 +6,19 @@ var todosInscritos =
 var dadosCandidato =
   "SELECT candidatos.idUser, candidatos.nome_completo, candidatos.curso_desejado, candidatos.data_nasc, candidatos.cidade_nasc, candidatos.estado_nasc, candidatos.tel1, candidatos.tel2, candidatos.cpf, candidatos.rg, candidatos.cidadao, usuarios.email, arquivos.tipo, arquivos.arquivo FROM candidatos INNER JOIN usuarios ON candidatos.idUser = usuarios.id INNER JOIN arquivos ON arquivos.idUser = usuarios.id WHERE usuarios.id = ?";
 
-//var dadosCompletos = "SELECT * FROM candidatos INNER JOIN estudos INNER JOIN usuarios INNER JOIN arquivos INNER JOIN socioeconomicos INNER JOIN valores ON usuarios.id = estudos.idUser WHERE usuarios.id = ?"
-var dadosCompletos =
-  "SELECT * FROM candidatos INNER JOIN usuarios ON candidatos.idUser = usuarios.id INNER JOIN socioeconomicos ON socioeconomicos.idUser = usuarios.id INNER JOIN valores ON valores.idUser = usuarios.id INNER JOIN estudos ON estudos.idUser = usuarios.id WHERE usuarios.id = ?";
-var dadosGabaritos =
-  "SELECT count(*) AS qtdPerguntas FROM gabaritos where modelo = 1";
+// <<<<<<< HEAD
+// //var dadosCompletos = "SELECT * FROM candidatos INNER JOIN estudos INNER JOIN usuarios INNER JOIN arquivos INNER JOIN socioeconomicos INNER JOIN valores ON usuarios.id = estudos.idUser WHERE usuarios.id = ?"
+// var dadosCompletos =
+//   "SELECT * FROM candidatos INNER JOIN usuarios ON candidatos.idUser = usuarios.id INNER JOIN socioeconomicos ON socioeconomicos.idUser = usuarios.id INNER JOIN valores ON valores.idUser = usuarios.id INNER JOIN estudos ON estudos.idUser = usuarios.id WHERE usuarios.id = ?";
+// var dadosGabaritos =
+//   "SELECT count(*) AS qtdPerguntas FROM gabaritos where modelo = 1";
+// =======
+//var dadosCompletos = "SELECT * FROM candidatos INNER JOIN usuarios ON candidatos.idUser = usuarios.id INNER JOIN socioeconomicos ON socioeconomicos.idUser = usuarios.id INNER JOIN valores ON valores.idUser = usuarios.id INNER JOIN estudos ON estudos.idUser = usuarios.id WHERE usuarios.id = ?"
+var dadosCompletos = "SELECT * FROM candidatos INNER JOIN usuarios ON candidatos.idUser = usuarios.id INNER JOIN socioeconomicos2020s ON socioeconomicos2020s.idUser = usuarios.id WHERE usuarios.id = ?";
+
+
+var dadosGabaritos = "SELECT count(*) AS qtdPerguntas FROM gabaritos where modelo = 1"
+// >>>>>>> a9894a3934b29b7e9e22dec7f2865da36ef9c70c
 //var checagemSimulado = "SELECT * FROM gabaritos g INNER JOIN simulados s on g.modelo = s.modelo and g.pergunta = s.pergunta WHERE s.idUser = ? ORDER BY g.pergunta DESC"
 //var checagemSimulado = "SELECT * FROM gabaritos g INNER JOIN simulados s on g.modelo = s.modelo and g.pergunta = s.pergunta + 1 WHERE s.idUser = ? ORDER BY g.pergunta DESC"
 var checagemSimulado =
