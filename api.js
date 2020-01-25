@@ -1463,6 +1463,7 @@ api.post('/cadastraSimulado', function(req,res){
 })
 
 api.post('/simulado', function(req,res){
+
     //verificar se aluno acertou questao
     gabaritoTable.findAll({
         where: {
@@ -1542,16 +1543,16 @@ api.post('/alunosimulado', function(req,res){
                 res.send("Erro: " + erro)
             })
         } else{
-            //ja possui registro na tabela para esse ID de usuario: UPDATE
-            alunosimuladoTable.update({
-                idUser: req.body.idUser,
-                horaInicio: req.body.horaInicio,
-                horaFimMax: req.body.horaFimMax
-            },{
-                where: {
-                    idUser: req.body.idUser,
-                }
-            });
+            // //ja possui registro na tabela para esse ID de usuario: UPDATE
+            // alunosimuladoTable.update({
+            //     idUser: req.body.idUser,
+            //     horaInicio: req.body.horaInicio,
+            //     horaFimMax: req.body.horaFimMax
+            // },{
+            //     where: {
+            //         idUser: req.body.idUser,
+            //     }
+            // });
 
         }
     })
