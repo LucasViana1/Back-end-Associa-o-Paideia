@@ -14,10 +14,11 @@ var dadosCandidato =
 //   "SELECT count(*) AS qtdPerguntas FROM gabaritos where modelo = 1";
 // =======
 //var dadosCompletos = "SELECT * FROM candidatos INNER JOIN usuarios ON candidatos.idUser = usuarios.id INNER JOIN socioeconomicos ON socioeconomicos.idUser = usuarios.id INNER JOIN valores ON valores.idUser = usuarios.id INNER JOIN estudos ON estudos.idUser = usuarios.id WHERE usuarios.id = ?"
-var dadosCompletos = "SELECT * FROM candidatos INNER JOIN usuarios ON candidatos.idUser = usuarios.id INNER JOIN socioeconomicos2020s ON socioeconomicos2020s.idUser = usuarios.id WHERE usuarios.id = ?";
+var dadosCompletos =
+  "SELECT * FROM candidatos INNER JOIN usuarios ON candidatos.idUser = usuarios.id INNER JOIN socioeconomicos2020s ON socioeconomicos2020s.idUser = usuarios.id WHERE usuarios.id = ?";
 
-
-var dadosGabaritos = "SELECT count(*) AS qtdPerguntas FROM gabaritos where modelo = 1"
+var dadosGabaritos =
+  "SELECT count(*) AS qtdPerguntas FROM gabaritos where modelo = 1";
 // >>>>>>> a9894a3934b29b7e9e22dec7f2865da36ef9c70c
 //var checagemSimulado = "SELECT * FROM gabaritos g INNER JOIN simulados s on g.modelo = s.modelo and g.pergunta = s.pergunta WHERE s.idUser = ? ORDER BY g.pergunta DESC"
 //var checagemSimulado = "SELECT * FROM gabaritos g INNER JOIN simulados s on g.modelo = s.modelo and g.pergunta = s.pergunta + 1 WHERE s.idUser = ? ORDER BY g.pergunta DESC"
@@ -30,7 +31,8 @@ var respAlunoSimples =
   "SELECT s.modelo, s.pergunta, s.acertou, g.materia, s.selecionado FROM simulados s INNER JOIN gabaritos g on s.pergunta = g.pergunta and s.modelo = g.modelo WHERE idUser = ? GROUP BY s.pergunta";
 var respAlunoCompleto =
   "SELECT s.modelo, s.pergunta, s.acertou, s.selecionado, g.materia, g.enunciado, g.resp_a, g.resp_b, g.resp_c, g.resp_d, g.resp_e, g.correta, g.img, u.nome, s.createdAt FROM simulados s INNER JOIN gabaritos g on s.pergunta = g.pergunta and s.modelo = g.modelo INNER JOIN usuarios u on u.id = s.idUser WHERE idUser = ?";
-var simuladoAdmCompleto = "select u.nome, u.sobrenome, s.idUser, u.matricula, s.modelo, s.pergunta, s.selecionado, s.acertou, g.materia from simulados s inner join usuarios u on s.idUser = u.id inner join gabaritos g on g.pergunta = s.pergunta and g.modelo = s.modelo  order by u.nome, s.pergunta ";
+var simuladoAdmCompleto =
+  "select u.nome, u.sobrenome, s.idUser, u.matricula, s.modelo, s.pergunta, s.selecionado, s.acertou, g.materia from simulados s inner join usuarios u on s.idUser = u.id inner join gabaritos g on g.pergunta = s.pergunta and g.modelo = s.modelo  group by s.idUser order by u.nome, s.pergunta ";
 
 //exportando a classe
 module.exports = class Operacoes {
@@ -83,5 +85,4 @@ module.exports = class Operacoes {
   static getSimuladoAdmCompleto(callback) {
     return db.query(simuladoAdmCompleto, callback);
   }
-
 };
