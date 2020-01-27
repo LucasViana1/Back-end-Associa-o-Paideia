@@ -30,6 +30,7 @@ var respAlunoSimples =
   "SELECT s.modelo, s.pergunta, s.acertou, g.materia, s.selecionado FROM simulados s INNER JOIN gabaritos g on s.pergunta = g.pergunta and s.modelo = g.modelo WHERE idUser = ? GROUP BY s.pergunta";
 var respAlunoCompleto =
   "SELECT s.modelo, s.pergunta, s.acertou, s.selecionado, g.materia, g.enunciado, g.resp_a, g.resp_b, g.resp_c, g.resp_d, g.resp_e, g.correta, g.img, u.nome, s.createdAt FROM simulados s INNER JOIN gabaritos g on s.pergunta = g.pergunta and s.modelo = g.modelo INNER JOIN usuarios u on u.id = s.idUser WHERE idUser = ?";
+var simuladoAdmCompleto = "select u.nome, u.sobrenome, s.idUser, s.modelo, s.pergunta, s.selecionado, s.acertou, g.materia from simulados s inner join usuarios u on s.idUser = u.id inner join gabaritos g on g.pergunta = s.pergunta and g.modelo = s.modelo  order by u.nome, s.pergunta ";
 
 //exportando a classe
 module.exports = class Operacoes {
@@ -79,4 +80,8 @@ module.exports = class Operacoes {
   static getRespAlunoCompleto(id, callback) {
     return db.query(respAlunoCompleto, [id], callback);
   }
+  static getSimuladoAdmCompleto(callback) {
+    return db.query(simuladoAdmCompleto, callback); 
+  }
+  
 };
