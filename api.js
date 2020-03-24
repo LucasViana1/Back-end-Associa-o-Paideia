@@ -1634,6 +1634,19 @@ api.get('/gabaritos', function (req, res) {
     //res.send('teste')
 })
 
+// NOVAS FUNÇÕES SIMULADO ADM/INSCRITO:
+api.get('/gabaritomodelos', async function (req, res) {
+
+    const gabaritos = await gabaritoTable.findAll();
+    console.log('gabaritos')
+    console.log(gabaritos)
+    gabaritos.then(function (dados) {
+        console.log('dados')
+        console.log(dados)
+        res.send(dados)
+    })
+})
+
 /*api.post('/gabarito', function(req,res){
     //verificar se aluno acertou questao
     gabaritoTable.findAll({
