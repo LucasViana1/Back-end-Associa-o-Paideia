@@ -24,13 +24,13 @@ const resultadoAlunoSimulado = require("./rotas/resultadoAlunoSimulado");
 api.use(cors()); //trata requisições que não é da mesma origem que a API
 api.use(
   bodyparser.urlencoded({
-    extended: true
+    extended: true,
   })
 ); //"urlencoded" recupe informações de formularios(por exemplo) e os converte
 api.use(
   bodyparser.json({
     limit: "20mb",
-    extended: true
+    extended: true,
   })
 ); //limita tamanho dos arquivos enviados (imagem,video,etc)
 
@@ -39,7 +39,7 @@ api.use(
 //resp.json envia a resposta ao cliente com um objeto json definido como parametro
 router.get("/", (req, resp) =>
   resp.json({
-    mensagem: "API em execução..."
+    mensagem: "API em execução...",
   })
 );
 const insereInscricao = require("./models/InscritosTable");
@@ -66,15 +66,15 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + "-" + file.originalname);
-  }
+  },
 });
 const upload = multer({
-  storage
+  storage,
 });
 
 //INSERE INSCRIÇÃO NO BANCO, MUDAR ESSA LINHA PARA PASTA DEDICADA A ROTAS! :
 //POSSIVELMENTE REMOVER ESSE TRECHO!
-api.post("/enviaInscricao", upload.single("rgFile"), function(req, res) {
+api.post("/enviaInscricao", upload.single("rgFile"), function (req, res) {
   var fs = require("fs");
 
   function base64_encode(file) {
@@ -124,7 +124,7 @@ const mail = require("./email/ServicoEmail");
 //console.log(Math.floor(Math.random() * 99999))
 
 //CADASTRA NOVO USUARIO
-api.post("/cadastraUser", function(req, res) {
+api.post("/cadastraUser", function (req, res) {
   //impede que seja inserido duplicatas, talvez add mais um parametro de verificação
   //para quando implementar logica de usuario que ja possui cadastro tentar se cadastrar novamente
   insereUsuario
@@ -132,11 +132,11 @@ api.post("/cadastraUser", function(req, res) {
       where: {
         //nome: req.body.nome,
         //sobrenome: req.body.sobrenome,
-        email: req.body.email
+        email: req.body.email,
         //senha: req.body.senha,
-      }
+      },
     })
-    .then(function(dados) {
+    .then(function (dados) {
       if (dados == "") {
         var codigoRandom = Math.floor(Math.random() * 99999);
         //insere usuario no banco
@@ -149,13 +149,13 @@ api.post("/cadastraUser", function(req, res) {
             adm: 0,
             ativo: 0,
             inscrito_atual: 0,
-            codigo: codigoRandom
+            codigo: codigoRandom,
           })
-          .then(function() {
+          .then(function () {
             //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
             //res.send("Pagamento cadastro com sucesso!")
           })
-          .catch(function(erro) {
+          .catch(function (erro) {
             res.send("Erro: " + erro);
           });
         mail.cadastroMail(
@@ -172,16 +172,16 @@ api.post("/cadastraUser", function(req, res) {
     });
 });
 //CADASTRA DADOS PESSOAIS DO CANDIDATO
-api.post("/insereDadosPessoais", function(req, res) {
+api.post("/insereDadosPessoais", function (req, res) {
   console.log("data inserida: " + req.body.data_nasc);
 
   candidatoTable
     .findAll({
       where: {
-        idUser: req.body.idUser
-      }
+        idUser: req.body.idUser,
+      },
     })
-    .then(function(dados) {
+    .then(function (dados) {
       if (dados == "") {
         //insere usuario no banco
         candidatoTable
@@ -196,10 +196,10 @@ api.post("/insereDadosPessoais", function(req, res) {
             cpf: req.body.cpf,
             rg: req.body.rg,
             cidadao: req.body.cidadao,
-            curso_desejado: req.body.curso_desejado
+            curso_desejado: req.body.curso_desejado,
           })
-          .then(function() {})
-          .catch(function(erro) {
+          .then(function () {})
+          .catch(function (erro) {
             res.send("Erro: " + erro);
           });
       } else {
@@ -215,26 +215,26 @@ api.post("/insereDadosPessoais", function(req, res) {
             tel2: req.body.tel2,
             cpf: req.body.cpf,
             rg: req.body.rg,
-            cidadao: req.body.cidadao
+            cidadao: req.body.cidadao,
           },
           {
             where: {
-              idUser: req.body.idUser
-            }
+              idUser: req.body.idUser,
+            },
           }
         );
       }
     });
 });
 //CADASTRA DADOS SOCIOECONOMICOS DO CANDIDATO (ATUALIZADO!!!)
-api.post("/insereDadosSocioeconomicos", function(req, res) {
+api.post("/insereDadosSocioeconomicos", function (req, res) {
   socioeconomicoTable
     .findAll({
       where: {
-        idUser: req.body.idUser
-      }
+        idUser: req.body.idUser,
+      },
     })
-    .then(function(dados) {
+    .then(function (dados) {
       if (dados == "") {
         //insere socioeconomico no banco
         socioeconomicoTable
@@ -275,13 +275,13 @@ api.post("/insereDadosSocioeconomicos", function(req, res) {
               req.body.mora_pessoas_perentesco_esposo,
             mora_pessoas_perentesco_avo: req.body.mora_pessoas_perentesco_avo,
             mora_pessoas_perentesco_amigo:
-              req.body.mora_pessoas_perentesco_amigo
+              req.body.mora_pessoas_perentesco_amigo,
           })
-          .then(function() {
+          .then(function () {
             //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
             //res.send("Pagamento cadastro com sucesso!")
           })
-          .catch(function(erro) {
+          .catch(function (erro) {
             res.send("Erro: " + erro);
           });
       } else {
@@ -324,12 +324,12 @@ api.post("/insereDadosSocioeconomicos", function(req, res) {
               req.body.mora_pessoas_perentesco_esposo,
             mora_pessoas_perentesco_avo: req.body.mora_pessoas_perentesco_avo,
             mora_pessoas_perentesco_amigo:
-              req.body.mora_pessoas_perentesco_amigo
+              req.body.mora_pessoas_perentesco_amigo,
           },
           {
             where: {
-              idUser: req.body.idUser
-            }
+              idUser: req.body.idUser,
+            },
           }
         );
       }
@@ -339,18 +339,18 @@ api.post("/insereDadosSocioeconomicos", function(req, res) {
   insereUsuario
     .findAll({
       where: {
-        id: req.body.idUser
-      }
+        id: req.body.idUser,
+      },
     })
-    .then(function(dados) {
+    .then(function (dados) {
       if (dados == "") {
         res.send("Nenhum registro encontrado!");
       } else {
         //TESTE DE RETORNO DE NUMERO DE INSCRITOS
         var qtd = 0;
-        operacoes.getQtdInscritos(function(error, retorno) {
+        operacoes.getQtdInscritos(function (error, retorno) {
           //console.log("retorno: "+retorno[0].id)
-          retorno.forEach(element => {
+          retorno.forEach((element) => {
             console.log("retorno: " + element.cancelado);
             if (element.cancelado == null) {
               qtd++;
@@ -372,12 +372,12 @@ api.post("/insereDadosSocioeconomicos", function(req, res) {
               {
                 inscrito_atual: 1,
                 espera: 0,
-                matricula: matricula
+                matricula: matricula,
               },
               {
                 where: {
-                  id: req.body.idUser
-                }
+                  id: req.body.idUser,
+                },
               }
             );
 
@@ -398,12 +398,12 @@ api.post("/insereDadosSocioeconomicos", function(req, res) {
               {
                 inscrito_atual: 1,
                 espera: 1,
-                matricula: matricula
+                matricula: matricula,
               },
               {
                 where: {
-                  id: req.body.idUser
-                }
+                  id: req.body.idUser,
+                },
               }
             );
             //envia email
@@ -418,12 +418,12 @@ api.post("/insereDadosSocioeconomicos", function(req, res) {
             if (qtd == 119) {
               controleTable.update(
                 {
-                  fim: 1
+                  fim: 1,
                 },
                 {
                   where: {
-                    id: 1
-                  }
+                    id: 1,
+                  },
                 }
               );
             }
@@ -437,7 +437,7 @@ api.post("/insereDadosSocioeconomicos", function(req, res) {
         // mail.finalizaInscricaoMail(retornoString[0].email, retornoString[0].nome)
       } //fim else
     })
-    .catch(function(erro) {
+    .catch(function (erro) {
       res.send("Erro encontrado: " + erro);
     });
 });
@@ -640,14 +640,14 @@ api.post("/insereDadosSocioeconomicos", function(req, res) {
 
 // })
 //CADASTRA DADOS ESTUDOS E FORMAÇÃO
-api.post("/insereDadosEstudos", function(req, res) {
+api.post("/insereDadosEstudos", function (req, res) {
   estudosTable
     .findAll({
       where: {
-        idUser: req.body.idUser
-      }
+        idUser: req.body.idUser,
+      },
     })
-    .then(function(dados) {
+    .then(function (dados) {
       if (dados == "") {
         //insere estudos/formacao usuario no banco
         estudosTable
@@ -677,13 +677,13 @@ api.post("/insereDadosEstudos", function(req, res) {
             vunesp: req.body.vunesp,
             enem: req.body.enem,
             fatec: req.body.fatec,
-            outro_curso_uni: req.body.outro_curso_uni
+            outro_curso_uni: req.body.outro_curso_uni,
           })
-          .then(function() {
+          .then(function () {
             //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
             //res.send("Pagamento cadastro com sucesso!")
           })
-          .catch(function(erro) {
+          .catch(function (erro) {
             res.send("Erro: " + erro);
           });
       } else {
@@ -714,12 +714,12 @@ api.post("/insereDadosEstudos", function(req, res) {
             comvest: req.body.comvest,
             vunesp: req.body.vunesp,
             enem: req.body.enem,
-            fatec: req.body.fatec
+            fatec: req.body.fatec,
           },
           {
             where: {
-              idUser: req.body.idUser
-            }
+              idUser: req.body.idUser,
+            },
           }
         );
       }
@@ -732,14 +732,14 @@ var teste = qtdIncritos.getTodos()
 console.log("total real: "+teste)*/
 
 //CADASTRA VALORES
-api.post("/insereDadosValores", function(req, res) {
+api.post("/insereDadosValores", function (req, res) {
   valoresTable
     .findAll({
       where: {
-        idUser: req.body.idUser
-      }
+        idUser: req.body.idUser,
+      },
     })
-    .then(function(dadosVerifica) {
+    .then(function (dadosVerifica) {
       if (dadosVerifica == "") {
         //insere valores no banco
         valoresTable
@@ -777,13 +777,13 @@ api.post("/insereDadosValores", function(req, res) {
             pre_idosos: req.body.pre_idosos,
             pre_deficiencia: req.body.pre_deficiencia,
             pre_fisica: req.body.pre_fisica,
-            pre_moradia: req.body.pre_moradia
+            pre_moradia: req.body.pre_moradia,
           })
-          .then(function() {
+          .then(function () {
             //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
             //res.send("Pagamento cadastro com sucesso!")
           })
-          .catch(function(erro) {
+          .catch(function (erro) {
             res.send("Erro: " + erro);
           });
 
@@ -791,18 +791,18 @@ api.post("/insereDadosValores", function(req, res) {
         insereUsuario
           .findAll({
             where: {
-              id: req.body.idUser
-            }
+              id: req.body.idUser,
+            },
           })
-          .then(function(dados) {
+          .then(function (dados) {
             if (dados == "") {
               res.send("Nenhum registro encontrado!");
             } else {
               //TESTE DE RETORNO DE NUMERO DE INSCRITOS
               var qtd = 0;
-              operacoes.getQtdInscritos(function(error, retorno) {
+              operacoes.getQtdInscritos(function (error, retorno) {
                 //console.log("retorno: "+retorno[0].id)
-                retorno.forEach(element => {
+                retorno.forEach((element) => {
                   console.log("retorno: " + element.cancelado);
                   if (element.cancelado == null) {
                     qtd++;
@@ -824,12 +824,12 @@ api.post("/insereDadosValores", function(req, res) {
                     {
                       inscrito_atual: 1,
                       espera: 0,
-                      matricula: matricula
+                      matricula: matricula,
                     },
                     {
                       where: {
-                        id: req.body.idUser
-                      }
+                        id: req.body.idUser,
+                      },
                     }
                   );
 
@@ -850,12 +850,12 @@ api.post("/insereDadosValores", function(req, res) {
                     {
                       inscrito_atual: 1,
                       espera: 1,
-                      matricula: matricula
+                      matricula: matricula,
                     },
                     {
                       where: {
-                        id: req.body.idUser
-                      }
+                        id: req.body.idUser,
+                      },
                     }
                   );
                   //envia email
@@ -870,12 +870,12 @@ api.post("/insereDadosValores", function(req, res) {
                   if (qtd == 119) {
                     controleTable.update(
                       {
-                        fim: 1
+                        fim: 1,
                       },
                       {
                         where: {
-                          id: 1
-                        }
+                          id: 1,
+                        },
                       }
                     );
                   }
@@ -892,7 +892,7 @@ api.post("/insereDadosValores", function(req, res) {
               // mail.finalizaInscricaoMail(retornoString[0].email, retornoString[0].nome)
             } //fim else
           })
-          .catch(function(erro) {
+          .catch(function (erro) {
             res.send("Erro encontrado: " + erro);
           });
       } else {
@@ -902,17 +902,17 @@ api.post("/insereDadosValores", function(req, res) {
     });
 });
 //CADASTRA ARQUIVOS DO CANDIDATO
-api.post("/insereDadosArquivos", function(req, res) {
+api.post("/insereDadosArquivos", function (req, res) {
   //melhorar esse trecho de inserção de multiplos registros
 
   arquivosTable
     .findAll({
       where: {
         idUser: req.body.idUser,
-        tipo: "FOTO"
-      }
+        tipo: "FOTO",
+      },
     })
-    .then(function(dados) {
+    .then(function (dados) {
       if (dados == "") {
         //caso não exista duplicata
         //inserir foto
@@ -921,12 +921,12 @@ api.post("/insereDadosArquivos", function(req, res) {
             .create({
               idUser: req.body.idUser,
               tipo: "FOTO",
-              arquivo: req.body.foto
+              arquivo: req.body.foto,
             })
-            .then(function() {
+            .then(function () {
               //console.log("AQUI: "+req.body.foto)
             })
-            .catch(function(erro) {
+            .catch(function (erro) {
               res.send("Erro: " + erro);
             });
         }
@@ -936,13 +936,13 @@ api.post("/insereDadosArquivos", function(req, res) {
           {
             idUser: req.body.idUser,
             tipo: "FOTO",
-            arquivo: req.body.foto
+            arquivo: req.body.foto,
           },
           {
             where: {
               idUser: req.body.idUser,
-              tipo: "FOTO"
-            }
+              tipo: "FOTO",
+            },
           }
         );
       }
@@ -952,10 +952,10 @@ api.post("/insereDadosArquivos", function(req, res) {
     .findAll({
       where: {
         idUser: req.body.idUser,
-        tipo: "RG"
-      }
+        tipo: "RG",
+      },
     })
-    .then(function(dados) {
+    .then(function (dados) {
       if (dados == "") {
         //caso não exista duplicata
         //inserir rg OBRIGATORIO (NUNCA NULO)
@@ -963,13 +963,13 @@ api.post("/insereDadosArquivos", function(req, res) {
           .create({
             idUser: req.body.idUser,
             tipo: "RG",
-            arquivo: req.body.rgCandidato
+            arquivo: req.body.rgCandidato,
           })
-          .then(function() {
+          .then(function () {
             //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
             //res.send("Pagamento cadastro com sucesso!")
           })
-          .catch(function(erro) {
+          .catch(function (erro) {
             res.send("Erro: " + erro);
           });
       } else {
@@ -977,13 +977,13 @@ api.post("/insereDadosArquivos", function(req, res) {
           {
             idUser: req.body.idUser,
             tipo: "RG",
-            arquivo: req.body.rgCandidato
+            arquivo: req.body.rgCandidato,
           },
           {
             where: {
               idUser: req.body.idUser,
-              tipo: "RG"
-            }
+              tipo: "RG",
+            },
           }
         );
       }
@@ -993,10 +993,10 @@ api.post("/insereDadosArquivos", function(req, res) {
     .findAll({
       where: {
         idUser: req.body.idUser,
-        tipo: "CPF"
-      }
+        tipo: "CPF",
+      },
     })
-    .then(function(dados) {
+    .then(function (dados) {
       if (dados == "") {
         //caso não exista duplicata
         //inserir cpf OBRIGATORIO (NUNCA NULO)
@@ -1004,13 +1004,13 @@ api.post("/insereDadosArquivos", function(req, res) {
           .create({
             idUser: req.body.idUser,
             tipo: "CPF",
-            arquivo: req.body.cpfCandidato
+            arquivo: req.body.cpfCandidato,
           })
-          .then(function() {
+          .then(function () {
             //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
             //res.send("Pagamento cadastro com sucesso!")
           })
-          .catch(function(erro) {
+          .catch(function (erro) {
             res.send("Erro: " + erro);
           });
       } else {
@@ -1019,13 +1019,13 @@ api.post("/insereDadosArquivos", function(req, res) {
           {
             idUser: req.body.idUser,
             tipo: "CPF",
-            arquivo: req.body.cpfCandidato
+            arquivo: req.body.cpfCandidato,
           },
           {
             where: {
               idUser: req.body.idUser,
-              tipo: "CPF"
-            }
+              tipo: "CPF",
+            },
           }
         );
       }
@@ -1035,10 +1035,10 @@ api.post("/insereDadosArquivos", function(req, res) {
     .findAll({
       where: {
         idUser: req.body.idUser,
-        tipo: "HISTORICO"
-      }
+        tipo: "HISTORICO",
+      },
     })
-    .then(function(dados) {
+    .then(function (dados) {
       if (dados == "") {
         //caso não exista duplicata
         //inserir historico OBRIGATORIO (NUNCA NULO)
@@ -1046,12 +1046,12 @@ api.post("/insereDadosArquivos", function(req, res) {
           .create({
             idUser: req.body.idUser,
             tipo: "HISTORICO",
-            arquivo: req.body.historico
+            arquivo: req.body.historico,
           })
-          .then(function() {
+          .then(function () {
             /*vazio */
           })
-          .catch(function(erro) {
+          .catch(function (erro) {
             res.send("Erro: " + erro);
           });
       } else {
@@ -1060,13 +1060,13 @@ api.post("/insereDadosArquivos", function(req, res) {
           {
             idUser: req.body.idUser,
             tipo: "HISTORICO",
-            arquivo: req.body.historico
+            arquivo: req.body.historico,
           },
           {
             where: {
               idUser: req.body.idUser,
-              tipo: "HISTORICO"
-            }
+              tipo: "HISTORICO",
+            },
           }
         );
       }
@@ -1076,10 +1076,10 @@ api.post("/insereDadosArquivos", function(req, res) {
     .findAll({
       where: {
         idUser: req.body.idUser,
-        tipo: "BOLSA"
-      }
+        tipo: "BOLSA",
+      },
     })
-    .then(function(dados) {
+    .then(function (dados) {
       if (dados == "") {
         //caso não exista duplicata
         //inserir bolsa
@@ -1088,10 +1088,10 @@ api.post("/insereDadosArquivos", function(req, res) {
             .create({
               idUser: req.body.idUser,
               tipo: "BOLSA",
-              arquivo: req.body.bolsa
+              arquivo: req.body.bolsa,
             })
-            .then(function() {})
-            .catch(function(erro) {
+            .then(function () {})
+            .catch(function (erro) {
               res.send("Erro: " + erro);
             });
         }
@@ -1101,13 +1101,13 @@ api.post("/insereDadosArquivos", function(req, res) {
           {
             idUser: req.body.idUser,
             tipo: "BOLSA",
-            arquivo: req.body.bolsa
+            arquivo: req.body.bolsa,
           },
           {
             where: {
               idUser: req.body.idUser,
-              tipo: "BOLSA"
-            }
+              tipo: "BOLSA",
+            },
           }
         );
       }
@@ -1117,10 +1117,10 @@ api.post("/insereDadosArquivos", function(req, res) {
     .findAll({
       where: {
         idUser: req.body.idUser,
-        tipo: "EJA"
-      }
+        tipo: "EJA",
+      },
     })
-    .then(function(dados) {
+    .then(function (dados) {
       if (dados == "") {
         //caso não exista duplicata
         //inserir eja
@@ -1129,10 +1129,10 @@ api.post("/insereDadosArquivos", function(req, res) {
             .create({
               idUser: req.body.idUser,
               tipo: "EJA",
-              arquivo: req.body.eja
+              arquivo: req.body.eja,
             })
-            .then(function() {})
-            .catch(function(erro) {
+            .then(function () {})
+            .catch(function (erro) {
               res.send("Erro: " + erro);
             });
         }
@@ -1142,13 +1142,13 @@ api.post("/insereDadosArquivos", function(req, res) {
           {
             idUser: req.body.idUser,
             tipo: "EJA",
-            arquivo: req.body.eja
+            arquivo: req.body.eja,
           },
           {
             where: {
               idUser: req.body.idUser,
-              tipo: "EJA"
-            }
+              tipo: "EJA",
+            },
           }
         );
       }
@@ -1158,10 +1158,10 @@ api.post("/insereDadosArquivos", function(req, res) {
     .findAll({
       where: {
         idUser: req.body.idUser,
-        tipo: "MEDICO"
-      }
+        tipo: "MEDICO",
+      },
     })
-    .then(function(dados) {
+    .then(function (dados) {
       if (dados == "") {
         //caso não exista duplicata
         //inserir medico
@@ -1170,10 +1170,10 @@ api.post("/insereDadosArquivos", function(req, res) {
             .create({
               idUser: req.body.idUser,
               tipo: "MEDICO",
-              arquivo: req.body.medico
+              arquivo: req.body.medico,
             })
-            .then(function() {})
-            .catch(function(erro) {
+            .then(function () {})
+            .catch(function (erro) {
               res.send("Erro: " + erro);
             });
         }
@@ -1183,13 +1183,13 @@ api.post("/insereDadosArquivos", function(req, res) {
           {
             idUser: req.body.idUser,
             tipo: "MEDICO",
-            arquivo: req.body.medico
+            arquivo: req.body.medico,
           },
           {
             where: {
               idUser: req.body.idUser,
-              tipo: "MEDICO"
-            }
+              tipo: "MEDICO",
+            },
           }
         );
       }
@@ -1199,10 +1199,10 @@ api.post("/insereDadosArquivos", function(req, res) {
     .findAll({
       where: {
         idUser: req.body.idUser,
-        tipo: "ENDERECO"
-      }
+        tipo: "ENDERECO",
+      },
     })
-    .then(function(dados) {
+    .then(function (dados) {
       if (dados == "") {
         //caso não exista duplicata
         //inserir endereco OBRIGATORIO (NUNCA NULO)
@@ -1210,10 +1210,10 @@ api.post("/insereDadosArquivos", function(req, res) {
           .create({
             idUser: req.body.idUser,
             tipo: "ENDERECO",
-            arquivo: req.body.endereco
+            arquivo: req.body.endereco,
           })
-          .then(function() {})
-          .catch(function(erro) {
+          .then(function () {})
+          .catch(function (erro) {
             res.send("Erro: " + erro);
           });
       } else {
@@ -1222,13 +1222,13 @@ api.post("/insereDadosArquivos", function(req, res) {
           {
             idUser: req.body.idUser,
             tipo: "ENDERECO",
-            arquivo: req.body.endereco
+            arquivo: req.body.endereco,
           },
           {
             where: {
               idUser: req.body.idUser,
-              tipo: "ENDERECO"
-            }
+              tipo: "ENDERECO",
+            },
           }
         );
       }
@@ -1238,10 +1238,10 @@ api.post("/insereDadosArquivos", function(req, res) {
     .findAll({
       where: {
         idUser: req.body.idUser,
-        tipo: "CIDADAO"
-      }
+        tipo: "CIDADAO",
+      },
     })
-    .then(function(dados) {
+    .then(function (dados) {
       if (dados == "") {
         //caso não exista duplicata
         //inserir cidadao OBRIGATORIO (NUNCA NULO)
@@ -1249,10 +1249,10 @@ api.post("/insereDadosArquivos", function(req, res) {
           .create({
             idUser: req.body.idUser,
             tipo: "CIDADAO",
-            arquivo: req.body.cidadao
+            arquivo: req.body.cidadao,
           })
-          .then(function() {})
-          .catch(function(erro) {
+          .then(function () {})
+          .catch(function (erro) {
             res.send("Erro: " + erro);
           });
       } else {
@@ -1261,13 +1261,13 @@ api.post("/insereDadosArquivos", function(req, res) {
           {
             idUser: req.body.idUser,
             tipo: "CIDADAO",
-            arquivo: req.body.cidadao
+            arquivo: req.body.cidadao,
           },
           {
             where: {
               idUser: req.body.idUser,
-              tipo: "CIDADAO"
-            }
+              tipo: "CIDADAO",
+            },
           }
         );
       }
@@ -1277,10 +1277,10 @@ api.post("/insereDadosArquivos", function(req, res) {
     .findAll({
       where: {
         idUser: req.body.idUser,
-        tipo: "ENSINO_MEDIO"
-      }
+        tipo: "ENSINO_MEDIO",
+      },
     })
-    .then(function(dados) {
+    .then(function (dados) {
       if (dados == "") {
         //caso não exista duplicata
         //inserir ensinoMedio
@@ -1289,10 +1289,10 @@ api.post("/insereDadosArquivos", function(req, res) {
             .create({
               idUser: req.body.idUser,
               tipo: "ENSINO_MEDIO",
-              arquivo: req.body.ensinoMedio
+              arquivo: req.body.ensinoMedio,
             })
-            .then(function() {})
-            .catch(function(erro) {
+            .then(function () {})
+            .catch(function (erro) {
               res.send("Erro: " + erro);
             });
         }
@@ -1302,13 +1302,13 @@ api.post("/insereDadosArquivos", function(req, res) {
           {
             idUser: req.body.idUser,
             tipo: "ENSINO_MEDIO",
-            arquivo: req.body.ensinoMedio
+            arquivo: req.body.ensinoMedio,
           },
           {
             where: {
               idUser: req.body.idUser,
-              tipo: "ENSINO_MEDIO"
-            }
+              tipo: "ENSINO_MEDIO",
+            },
           }
         );
       }
@@ -1318,10 +1318,10 @@ api.post("/insereDadosArquivos", function(req, res) {
     .findAll({
       where: {
         idUser: req.body.idUser,
-        tipo: "RG_RESPONSAVEL"
-      }
+        tipo: "RG_RESPONSAVEL",
+      },
     })
-    .then(function(dados) {
+    .then(function (dados) {
       if (dados == "") {
         //caso não exista duplicata
         //inserir rgResponsavel
@@ -1330,10 +1330,10 @@ api.post("/insereDadosArquivos", function(req, res) {
             .create({
               idUser: req.body.idUser,
               tipo: "RG_RESPONSAVEL",
-              arquivo: req.body.rgResponsavel
+              arquivo: req.body.rgResponsavel,
             })
-            .then(function() {})
-            .catch(function(erro) {
+            .then(function () {})
+            .catch(function (erro) {
               res.send("Erro: " + erro);
             });
         }
@@ -1343,13 +1343,13 @@ api.post("/insereDadosArquivos", function(req, res) {
           {
             idUser: req.body.idUser,
             tipo: "RG_RESPONSAVEL",
-            arquivo: req.body.rgResponsavel
+            arquivo: req.body.rgResponsavel,
           },
           {
             where: {
               idUser: req.body.idUser,
-              tipo: "RG_RESPONSAVEL"
-            }
+              tipo: "RG_RESPONSAVEL",
+            },
           }
         );
       }
@@ -1359,10 +1359,10 @@ api.post("/insereDadosArquivos", function(req, res) {
     .findAll({
       where: {
         idUser: req.body.idUser,
-        tipo: "CPF_RESPONSAVEL"
-      }
+        tipo: "CPF_RESPONSAVEL",
+      },
     })
-    .then(function(dados) {
+    .then(function (dados) {
       if (dados == "") {
         //caso não exista duplicata
         //inserir cpfResponsavel
@@ -1371,10 +1371,10 @@ api.post("/insereDadosArquivos", function(req, res) {
             .create({
               idUser: req.body.idUser,
               tipo: "CPF_RESPONSAVEL",
-              arquivo: req.body.cpfResponsavel
+              arquivo: req.body.cpfResponsavel,
             })
-            .then(function() {})
-            .catch(function(erro) {
+            .then(function () {})
+            .catch(function (erro) {
               res.send("Erro: " + erro);
             });
         }
@@ -1384,13 +1384,13 @@ api.post("/insereDadosArquivos", function(req, res) {
           {
             idUser: req.body.idUser,
             tipo: "CPF_RESPONSAVEL",
-            arquivo: req.body.cpfResponsavel
+            arquivo: req.body.cpfResponsavel,
           },
           {
             where: {
               idUser: req.body.idUser,
-              tipo: "CPF_RESPONSAVEL"
-            }
+              tipo: "CPF_RESPONSAVEL",
+            },
           }
         );
       }
@@ -1398,32 +1398,32 @@ api.post("/insereDadosArquivos", function(req, res) {
 });
 
 //CANCELA INSCRITO
-api.post("/cancelaInscrito", function(req, res) {
+api.post("/cancelaInscrito", function (req, res) {
   insereUsuario.update(
     {
-      cancelado: 1
+      cancelado: 1,
     },
     {
       where: {
-        id: req.body.idUser
-      }
+        id: req.body.idUser,
+      },
     }
   );
 
   insereUsuario
     .findAll({
       where: {
-        id: req.body.idUser
-      }
+        id: req.body.idUser,
+      },
     })
-    .then(function(dados) {
+    .then(function (dados) {
       //console.log(dados)
       //res.send(dados)
       var retorno = JSON.parse(JSON.stringify(dados));
       console.log("email inscrito cancelado: " + retorno[0].email);
       mail.cancelaInscricao(retorno[0].email);
     })
-    .catch(function(erro) {
+    .catch(function (erro) {
       res.send("Erro encontrado: " + erro);
     });
 
@@ -1431,15 +1431,15 @@ api.post("/cancelaInscrito", function(req, res) {
 });
 
 //VALIDA PRIMEIRO ACESSO DO USUÁRIO
-api.post("/valida", function(req, res) {
+api.post("/valida", function (req, res) {
   insereUsuario
     .findAll({
       where: {
         id: req.body.idUser,
-        codigo: req.body.codigo
-      }
+        codigo: req.body.codigo,
+      },
     })
-    .then(function(dados) {
+    .then(function (dados) {
       //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
       //res.send("Pesquisa ok!")
       if (dados == "") {
@@ -1452,31 +1452,31 @@ api.post("/valida", function(req, res) {
         //se o codigo for correto, "ativo" = 1
         insereUsuario.update(
           {
-            ativo: 1
+            ativo: 1,
           },
           {
             where: {
-              id: req.body.idUser
-            }
+              id: req.body.idUser,
+            },
           }
         );
       }
     })
-    .catch(function(erro) {
+    .catch(function (erro) {
       res.send("Erro encontrado: " + erro);
     });
 });
 //SESSAO USUARIO CADASTRADO
-api.post("/login", function(req, res) {
+api.post("/login", function (req, res) {
   //insere usuario no banco
   insereUsuario
     .findAll({
       where: {
         email: req.body.email,
-        senha: req.body.senha
-      }
+        senha: req.body.senha,
+      },
     })
-    .then(function(dados) {
+    .then(function (dados) {
       //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
       //res.send("Pesquisa ok!")
       if (dados == "") {
@@ -1485,20 +1485,20 @@ api.post("/login", function(req, res) {
         res.send(dados);
       }
     })
-    .catch(function(erro) {
+    .catch(function (erro) {
       res.send("Erro encontrado: " + erro);
     });
 });
 //RECUPERAÇÃO DE SENHA
-api.post("/recuperaSenha", function(req, res) {
+api.post("/recuperaSenha", function (req, res) {
   //insere usuario no banco
   insereUsuario
     .findAll({
       where: {
-        email: req.body.email
-      }
+        email: req.body.email,
+      },
     })
-    .then(function(dados) {
+    .then(function (dados) {
       //res.redirect('/')//redireciona para a rota indicada caso o registro tenha sido inserido com sucesso
       //res.send("Pesquisa ok!")
       if (dados == "") {
@@ -1512,7 +1512,7 @@ api.post("/recuperaSenha", function(req, res) {
         );
       }
     })
-    .catch(function(erro) {
+    .catch(function (erro) {
       res.send("Erro encontrado: " + erro);
     });
 });
@@ -1533,24 +1533,24 @@ api.post("/recuperaSenha", function(req, res) {
 })*/
 
 /*TRECHO RESPONSÁVEL PARA BLOQUEAR A INSCRICAO QUANDO NÃO TIVER MAIS VAGAS */
-api.get("/inscricao", function(req, res) {
+api.get("/inscricao", function (req, res) {
   controleTable
     .findAll({
       where: {
-        id: 1
-      }
+        id: 1,
+      },
     })
-    .then(function(dados) {
+    .then(function (dados) {
       res.send(dados);
     })
-    .catch(function(erro) {
+    .catch(function (erro) {
       res.send("Erro encontrado: " + erro);
     });
   //res.send('teste')
 });
 
 //define nº modelo de simulado ao aluno
-api.get("/modelo", function(req, res) {
+api.get("/modelo", function (req, res) {
   //TESTANDO Nº ALEATORIO PARA MODELO DE SIMULADO:
   /*let um = 0
     let dois = 0
@@ -1599,7 +1599,7 @@ api.get("/modelo", function(req, res) {
     //res.send('teste')*/
 });
 
-api.post("/cadastraSimulado", function(req, res) {
+api.post("/cadastraSimulado", function (req, res) {
   //variaveis recebem requisição para facilitar organização/entendimento
   let alternativaCerta = req.body.correta;
   let numeroPergunta = req.body.pergunta;
@@ -1650,7 +1650,7 @@ api.post("/cadastraSimulado", function(req, res) {
     resp_d: D,
     // resp_e: E,
     correta: certaModelo1,
-    img: req.body.img
+    img: req.body.img,
   });
   //andando UMA casa da esq p/ dir
   gabaritoTable.create({
@@ -1664,7 +1664,7 @@ api.post("/cadastraSimulado", function(req, res) {
     resp_d: C,
     // resp_e: D,
     correta: certaModelo2,
-    img: req.body.img
+    img: req.body.img,
   });
   //andando DUAS da esq p/ dir
   gabaritoTable.create({
@@ -1678,7 +1678,7 @@ api.post("/cadastraSimulado", function(req, res) {
     resp_d: B,
     // resp_e: C,
     correta: certaModelo3,
-    img: req.body.img
+    img: req.body.img,
   });
   //andando TRES da esq p/ dir
   gabaritoTable.create({
@@ -1692,21 +1692,21 @@ api.post("/cadastraSimulado", function(req, res) {
     resp_d: A,
     // resp_e: B,
     correta: certaModelo4,
-    img: req.body.img
+    img: req.body.img,
   });
 });
 
-api.post("/simulado", function(req, res) {
+api.post("/simulado", function (req, res) {
   //verificar se aluno acertou questao
   gabaritoTable
     .findAll({
       where: {
         //modelo prova e nº pergunta
         modelo: req.body.modelo,
-        pergunta: req.body.pergunta
-      }
+        pergunta: req.body.pergunta,
+      },
     })
-    .then(function(dados) {
+    .then(function (dados) {
       if (dados == "") {
         res.send("Sem retorno dos dados gabarito/simulado");
       } else {
@@ -1729,7 +1729,7 @@ api.post("/simulado", function(req, res) {
           modelo: req.body.modelo,
           pergunta: req.body.pergunta,
           selecionado: req.body.selecionado,
-          acertou: correto
+          acertou: correto,
         });
         //res.send(correto)
 
@@ -1753,30 +1753,30 @@ api.post("/simulado", function(req, res) {
             })*/
       }
     })
-    .catch(function(erro) {
+    .catch(function (erro) {
       res.send("Erro encontrado: " + erro);
     });
 });
 
-api.post("/alunosimulado", function(req, res) {
+api.post("/alunosimulado", function (req, res) {
   alunosimuladoTable
     .findAll({
       where: {
-        idUser: req.body.idUser
-      }
+        idUser: req.body.idUser,
+      },
     })
-    .then(function(dados) {
+    .then(function (dados) {
       if (dados == "") {
         alunosimuladoTable
           .create({
             idUser: req.body.idUser,
             horaInicio: req.body.horaInicio,
-            horaFimMax: req.body.horaFimMax
+            horaFimMax: req.body.horaFimMax,
           })
-          .then(function(resp) {
+          .then(function (resp) {
             console.log("resp alunosimulado: " + resp);
           })
-          .catch(function(erro) {
+          .catch(function (erro) {
             res.send("Erro: " + erro);
           });
       } else {
@@ -1794,22 +1794,22 @@ api.post("/alunosimulado", function(req, res) {
     });
 });
 
-api.get("/gabaritos", function(req, res) {
+api.get("/gabaritos", function (req, res) {
   gabaritoTable
     .findAll({})
-    .then(function(dados) {
+    .then(function (dados) {
       res.send(dados);
       //console.log("gabaritos: "+dados)
     })
-    .catch(function(erro) {
+    .catch(function (erro) {
       res.send("Erro encontrado: " + erro);
     });
   //res.send('teste')
 });
 
 // NOVAS FUNÇÕES SIMULADO ADM/INSCRITO:
-api.get("/gabaritomodelos", function(req, res) {
-  gabaritoTable.findAll({}).then(function(dados) {
+api.get("/gabaritomodelos", function (req, res) {
+  gabaritoTable.findAll({}).then(function (dados) {
     res.send(dados);
     //console.log("gabaritos: "+dados)
   });
@@ -1968,26 +1968,34 @@ api.get("/gabaritomodelos", function(req, res) {
 
 //arquivos em pdf:
 const fs = require("fs");
-api.get("/informacoes", function(request, response) {
+api.get("/informacoes", function (request, response) {
   //var tempFile="/home/applmgr/Desktop/123456.pdf";
   var tempFile = "pdf/informacoes.pdf";
-  fs.readFile(tempFile, function(err, data) {
+  fs.readFile(tempFile, function (err, data) {
     response.contentType("application/pdf");
     response.send(data);
   });
 });
-api.get("/edital", function(request, response) {
+api.get("/edital", function (request, response) {
   //var tempFile="/home/applmgr/Desktop/123456.pdf";
   var tempFile = "pdf/edital.pdf";
-  fs.readFile(tempFile, function(err, data) {
+  fs.readFile(tempFile, function (err, data) {
     response.contentType("application/pdf");
     response.send(data);
   });
 });
-api.get("/requerimento", function(request, response) {
+api.get("/requerimento", function (request, response) {
   //var tempFile="/home/applmgr/Desktop/123456.pdf";
   var tempFile = "pdf/REQUERIMENTO - 2018.pdf";
-  fs.readFile(tempFile, function(err, data) {
+  fs.readFile(tempFile, function (err, data) {
+    response.contentType("application/pdf");
+    response.send(data);
+  });
+});
+api.get("/termo_responsabilidade", function (request, response) {
+  //var tempFile="/home/applmgr/Desktop/123456.pdf";
+  var tempFile = "pdf/termo_responsabilidade.pdf";
+  fs.readFile(tempFile, function (err, data) {
     response.contentType("application/pdf");
     response.send(data);
   });

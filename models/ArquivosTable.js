@@ -1,18 +1,18 @@
-const db = require('./db')
+const db = require("./db");
 
-const Arquivos = db.sequelize.define('arquivos', {
-    idUser: {
-        type: db.Sequelize.INTEGER
-    },
-    tipo: {
-        type: db.Sequelize.STRING
-    },
-    arquivo: {
-        type: db.Sequelize.TEXT('long')
-    }
-})//POSTERIORMENTE REMOVER OS CAMPOS "ATIVO" E "ESPERA"
+const Arquivos = db.sequelize.define("arquivos", {
+  idUser: {
+    type: db.Sequelize.INTEGER,
+  },
+  tipo: {
+    type: db.Sequelize.STRING,
+  },
+  arquivo: {
+    type: db.Sequelize.TEXT("long"),
+  },
+});
 
 //Criar a tabela
-//Arquivos.sync({force: true})
+// Arquivos.sync({ force: true });
 
-module.exports = Arquivos
+module.exports = Arquivos;
