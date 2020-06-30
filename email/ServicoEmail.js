@@ -1,8 +1,9 @@
 //serviço de email temporario, posteriormente implementar em outro arquivo
 const nodemailer = require("nodemailer");
-// const config = require('../dev/config')
+
 const remetente = process.env.EMAILUSER;
 const senhaRemetente = process.env.EMAILPASSWORD;
+
 const respAuto =
   "<p>Favor não responder esse e-mail, se quiser entrar em contato conosco utilize o e-mail <em>contato@associacaopaideia.org.br</em></p>";
 //serviço de transporte de email
@@ -26,8 +27,7 @@ exports.cadastroMail = function (destinatario, senha, nome, codigo) {
     from: remetente,
     to: destinatario, // destinatario
     subject: "CONFIRMAÇÃO DE CADASTRO", // assunto
-    html:
-      "<h1>Olá " +
+    html: "<h1>Olá " +
       nome +
       "!</h1>" +
       "<h2>Seu cadastro ao Sistema da Associação Paideia foi realizado com sucesso!</h2><br>" +
@@ -60,8 +60,7 @@ exports.listaEsperaMail = function (destinatario, nome, matricula) {
     from: remetente,
     to: destinatario,
     subject: "CONFIRMAÇÃO DE INSCRIÇÃO", // assunto
-    html:
-      "<h2>Olá " +
+    html: "<h2>Olá " +
       nome +
       "!</h2><br>" +
       "<p>Sua inscrição para o segundo semestre de 2020 foi efetuada com sucesso e sua inscrição consta na lista de espera " +
@@ -89,8 +88,7 @@ exports.listaRegularMail = function (destinatario, nome, matricula) {
     from: remetente,
     to: destinatario,
     subject: "CONFIRMAÇÃO DE INSCRIÇÃO", // assunto
-    html:
-      "<h2>Olá " +
+    html: "<h2>Olá " +
       nome +
       "!</h2><br>" +
       "<p>Sua inscrição para o segundo semestre de 2020 foi efetuada com sucesso e sua inscrição consta na lista regular.</p>" +
@@ -99,10 +97,12 @@ exports.listaRegularMail = function (destinatario, nome, matricula) {
       " </p><br>" +
       "Em anexo o termo de responsabilidade, que deverá ser preenchido, digitalizado e enviado no E-mail de contato da Associação (caso não tenha sido enviado durante a inscrição!)" +
       "<br>" +
-      // "<p>A Prova Diagnóstica não é instrumento de seleção e sim um mapa que utilizamos como instrumento para orientação nos estudos. " +
-      // "Faça a Prova Diagnóstica com o máximo de atenção e comprometimento. Ela estará disponível em nosso sistema até às 23h59 do dia 30 de " +
-      // "janeiro de 2020, acesse o simulado pelo link " +
-      // '<a href="https://www.associacaopaideia.org.br/simulado">https://www.associacaopaideia.org.br/simulado</a>' +
+      "<p>A Prova Diagnóstica não é instrumento de seleção e sim um mapa que utilizamos como instrumento para orientação nos estudos. " +
+      "Faça a Prova Diagnóstica com o máximo de atenção e comprometimento. Ela estará disponível em nosso sistema apenas nos dias 04/07/2020 e 25/07/2020 " +
+      "durante todo o dia (das 00:00 até 23:59), " +
+      "acesse o simulado pelo link (esse link estará disponível apenas nos dias de simulado) " +
+      '<a href="https://www.associacaopaideia.org.br/simulado">https://www.associacaopaideia.org.br/simulado</a>' +
+      "<br>" +
       " Nós do Focus Pré-vestibular desejamos a você boas vindas e um ano pleno de realizações. </p>" +
       "<br>" +
       respAuto,
@@ -125,8 +125,7 @@ exports.cancelaInscricao = function (destinatario) {
     from: remetente,
     to: destinatario,
     subject: "INSCRIÇÃO CANCELADA", // assunto
-    html:
-      "<h2>Caro (a) candidato (a).</h2><br>" +
+    html: "<h2>Caro (a) candidato (a).</h2><br>" +
       "<p>Verificamos em nosso sistema que você não executou corretamente alguns dos passos necessários para efetivar sua inscrição, podendo ser:</p> " +
       "<ul>" +
       "<li>Cópia do RG, CPF e uma fotografia recente 3x4 do (a) candidato (a) – pode utilizar uma “selfie” com boa qualidade e luz;</li>" +
@@ -160,8 +159,7 @@ exports.listaCheiaMail = function (destinatario, nome) {
     from: remetente,
     to: destinatario,
     subject: "VAGAS EXCEDIDAS", // assunto
-    html:
-      "<h2>Olá " +
+    html: "<h2>Olá " +
       nome +
       "!</h2><br>" +
       "<p>Desculpe mas sua matrícula não pode ser concluída pelo fato de todas as vagas já terem sido preenchidas, tente novamente no próximo semestre.</p>" +
@@ -185,8 +183,7 @@ exports.recuperaSenhaMail = function (destinatario, senha, nome) {
     from: remetente,
     to: destinatario, // destinatario
     subject: "RECUPERAÇÃO DE SENHA", // assunto
-    html:
-      "<h1>Olá " +
+    html: "<h1>Olá " +
       nome +
       "!</h1>" +
       "<h3><p>Segue abaixo os dados para acesso ao site:</p></h3>" +
