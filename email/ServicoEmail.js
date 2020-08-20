@@ -98,7 +98,7 @@ exports.listaRegularMail = function (destinatario, nome, matricula) {
       "Em anexo o termo de responsabilidade, que deverá ser preenchido, digitalizado e enviado no E-mail de contato da Associação (caso não tenha sido enviado durante a inscrição!)" +
       "<br>" +
       "<p>A Prova Diagnóstica não é instrumento de seleção e sim um mapa que utilizamos como instrumento para orientação nos estudos. " +
-      "Faça a Prova Diagnóstica com o máximo de atenção e comprometimento. Ela estará disponível em nosso sistema apenas nos dias 04/07/2020 e 25/07/2020 " +
+      "Faça a Prova Diagnóstica com o máximo de atenção e comprometimento. Ela estará disponível em nosso sistema apenas nos dias 20/08/2020 e 21/08/2020 " +
       "durante todo o dia (das 00:00 até 23:59), " +
       "acesse o simulado pelo link (esse link estará disponível apenas nos dias de simulado) " +
       '<a href="https://www.associacaopaideia.org.br/simulado">https://www.associacaopaideia.org.br/simulado</a>' +
